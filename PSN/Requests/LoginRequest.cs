@@ -1,50 +1,47 @@
-﻿using System.Threading.Tasks;
-using Flurl.Http;
+﻿using Flurl.Http;
 using PSN.Exceptions;
 using PSN.Extensions;
+using System.Threading.Tasks;
 
 namespace PSN.Requests
 {
     /// <summary>
     /// Class that builds the initial login request
     /// </summary>
-    public class LoginRequest
+    public static class LoginRequest
     {
-        public readonly string authentication_type = "password";
-        public string username { get; set; }
-        public string password { get; set; }
-        public readonly string client_id = "71a7beb8-f21a-47d9-a604-2e71bee24fe0";
+        public static readonly string AuthenticationType = "password";
+        public static string Username { get; set; }
+        public static string Password { get; set; }
+        public static readonly string ClientId = "71a7beb8-f21a-47d9-a604-2e71bee24fe0";
 
         /// <summary>
         /// Execute the initial login request.
         /// </summary>
         /// <returns>NPSSO Id for the next auth step.</returns>
-        public async Task<string> Make()
-        {
-            if (string.IsNullOrEmpty(this.username) || string.IsNullOrEmpty(this.password))
-                throw new NPSSOIdNotFoundException("The username or password fields have not been set.");
+        public static async Task<string> Make(string username, string password) {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                throw new NpssoIdNotFoundException("The username or password fields have not been set.");
 
             try
             {
-                dynamic result = await Utilities.SendPOSTRequest("https://auth.api.sonyentertainmentnetwork.com/2.0/ssocookie", 
-                new
+                dynamic result = await Utilities.SendPostRequest(APIEndpoints.SSO_COOKIE_URL, new
                 {
-                    authentication_type = authentication_type,
+                    authentication_type = AuthenticationType,
                     username = username,
                     password = password,
-                    client_id = client_id
-                }, 
-                new
+                    client_id = ClientId
+                }, string.Empty, new
                 {
                     h1 = "Content-Type: application/json",
                 }).ReceiveJson();
 
                 if (Utilities.ContainsKey(result, "error"))
-                    throw new NPSSOIdNotFoundException(result.error_description);
+                    throw new NpssoIdNotFoundException(result.error_description);
 
                 return result.npsso;
             }
-            catch(NPSSOIdNotFoundException e) { throw new NPSSOIdNotFoundException(e.Message); }
+            catch (NpssoIdNotFoundException e) { throw new NpssoIdNotFoundException(e.Message); }
         }
     }
 }

@@ -53,14 +53,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auth.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="OAuthTokens.cs" />
+    <Compile Include="APIResponses\ActivityResponse.cs" />
+    <Compile Include="APIResponses\CompareTrophiesResponse.cs" />
+    <Compile Include="API\Account.cs" />
+    <Compile Include="APIEndpoints.cs" />
+    <Compile Include="APIResponses\AvatarCategories.cs" />
+    <Compile Include="APIResponses\Error.cs" />
+    <Compile Include="APIResponses\Friends.cs" />
+    <Compile Include="APIResponses\Profile.cs" />
+    <Compile Include="APIResponses\GameTrophiesResponse.cs" />
+    <Compile Include="APIResponses\UserTrophiesResponse.cs" />
+    <Compile Include="API\Auth.cs" />
+    <Compile Include="Exceptions\Exceptions.cs" />
+    <Compile Include="API\Message.cs" />
+    <Compile Include="Extensions\OAuthTokens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\AvatarRequest.cs" />
     <Compile Include="Requests\LoginRequest.cs" />
+    <Compile Include="Requests\MessageRequest.cs" />
     <Compile Include="Requests\NPGrantCodeRequest.cs" />
     <Compile Include="Requests\OAuthRequest.cs" />
-    <Compile Include="Utilities.cs" />
+    <Compile Include="API\Trophies.cs" />
+    <Compile Include="API\User.cs" />
+    <Compile Include="Extensions\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
