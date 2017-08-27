@@ -23,11 +23,11 @@ namespace PSN.Extensions
         /// <param name="headers">Headers to be sent with the request to the service (optional).</param>
         /// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
         /// <returns>FlurlClient object to be used to send the request.</returns>
-        private static FlurlClient SetupRequest(HttpMethod method, string url, string oAuthToken = "", object data = null, object headers = null, object cookies = null) {
+        private static IFlurlClient SetupRequest(HttpMethod method, string url, string oAuthToken = "", object data = null, object headers = null, object cookies = null) {
             if (method == HttpMethod.Get && data != null)
                 url = url.SetQueryParams(data);
 
-            FlurlClient fc = new FlurlClient(url);
+            IFlurlClient fc = new FlurlClient(url);
 
             if (headers != null)
                 fc = fc.WithHeaders(headers);
@@ -46,8 +46,8 @@ namespace PSN.Extensions
         /// <param name="flurlClient">The FlurlClient object to use for the request.</param>
         /// <param name="content">HttpContent object of the data to be sent.</param>
         /// <returns>HttpResponseMessage object to be read.</returns>
-        public static async Task<HttpResponseMessage> SendRequest(HttpMethod method, FlurlClient flurlClient, HttpContent content) {
-            return await flurlClient.SendAsync(method, content);
+        public static Task<HttpResponseMessage> SendRequest(HttpMethod method, IFlurlClient flurlClient, HttpContent content) {
+            return flurlClient.SendAsync(method, content);
         }
 
         /// <summary>
@@ -59,10 +59,10 @@ namespace PSN.Extensions
         /// <param name="headers">Headers to be sent with the request to the service (optional).</param>
         /// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
         /// <returns>HttpResponseMessage object to be read.</returns>
-        public static async Task<HttpResponseMessage> SendGetRequest(string url, string oAuthToken = "", object data = null, object headers = null, object cookies = null) {
-            FlurlClient fc = SetupRequest(HttpMethod.Get, url, oAuthToken, data, headers, cookies);
+        public static Task<HttpResponseMessage> SendGetRequest(string url, string oAuthToken = "", object data = null, object headers = null, object cookies = null) {
+            IFlurlClient fc = SetupRequest(HttpMethod.Get, url, oAuthToken, data, headers, cookies);
 
-            return await fc.GetAsync();
+            return fc.GetAsync();
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace PSN.Extensions
         /// <param name="headers">Headers to be sent with the request to the service (optional).</param>
         /// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
         /// <returns>HttpResponseMessage object to be read.</returns>
-        public static async Task<HttpResponseMessage> SendPostRequest(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) {
-            FlurlClient fc = SetupRequest(HttpMethod.Post, url, oAuthToken, data, headers, cookies);
+        public static Task<HttpResponseMessage> SendPostRequest(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) {
+            IFlurlClient fc = SetupRequest(HttpMethod.Post, url, oAuthToken, data, headers, cookies);
 
-            return await fc.PostUrlEncodedAsync(data);
+            return fc.PostUrlEncodedAsync(data);
         }
 
         /// <summary>
@@ -89,10 +89,10 @@ namespace PSN.Extensions
         /// <param name="headers">Headers to be sent with the request to the service (optional).</param>
         /// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
         /// <returns>HttpResponseMessage object to be read.</returns>
-        public static async Task<HttpResponseMessage> SendJsonPostRequest(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) {
-            FlurlClient fc = SetupRequest(HttpMethod.Post, url, oAuthToken, data, headers, cookies);
+        public static Task<HttpResponseMessage> SendJsonPostRequest(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) {
+            IFlurlClient fc = SetupRequest(HttpMethod.Post, url, oAuthToken, data, headers, cookies);
 
-            return await fc.PostJsonAsync(data);
+            return fc.PostJsonAsync(data);
         }
 
         /// <summary>
@@ -103,10 +103,10 @@ namespace PSN.Extensions
         /// <param name="headers">Headers to be sent with the request to the service (optional).</param>
         /// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
         /// <returns>HttpResponseMessage object to be read.</returns>
-        public static async Task<HttpResponseMessage> SendDeleteRequest(string url, string oAuthToken = "", object headers = null, object cookies = null) {
-            FlurlClient fc = SetupRequest(HttpMethod.Delete, url, oAuthToken, null, headers, cookies);
+        public static Task<HttpResponseMessage> SendDeleteRequest(string url, string oAuthToken = "", object headers = null, object cookies = null) {
+            IFlurlClient fc = SetupRequest(HttpMethod.Delete, url, oAuthToken, null, headers, cookies);
 
-            return await fc.DeleteAsync();
+            return fc.DeleteAsync();
         }
 
         /// <summary>
@@ -118,11 +118,11 @@ namespace PSN.Extensions
         /// <param name="headers">Headers to be sent with the request to the service (optional).</param>
         /// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
         /// <returns>HttpResponseMessage object to be read.</returns>
-        public static async Task<HttpResponseMessage> SendPutRequest(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) {
-            FlurlClient fc = SetupRequest(HttpMethod.Put, url, oAuthToken, data, headers, cookies);
+        public static Task<HttpResponseMessage> SendPutRequest(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) {
+            IFlurlClient fc = SetupRequest(HttpMethod.Put, url, oAuthToken, data, headers, cookies);
 
             //This API shouldn't have a service for PUTting non-JSON data.
-            return await fc.PutJsonAsync(data);
+            return fc.PutJsonAsync(data);
         }
 
         //TODO: maybe a SendPATCHRequest method (only if necessary).
