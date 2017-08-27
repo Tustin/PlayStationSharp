@@ -120,7 +120,7 @@ namespace PSN
             {
                 MessageRequest mr = new MessageRequest(messageContent.UsersToInvite, new MessageData(messageContent.MessageText, 1));
                 var message = mr.BuildTextMessage();
-                FlurlClient fc = new FlurlClient("https://us-gmsg.np.community.playstation.net/groupMessaging/v1/messageGroups")
+                IFlurlClient fc = new FlurlClient("https://us-gmsg.np.community.playstation.net/groupMessaging/v1/messageGroups")
                     .WithHeader("Authorization", new AuthenticationHeaderValue("Bearer", Auth.CurrentInstance.AccountTokens.Authorization));
                 var response = await Utilities.SendRequest(HttpMethod.Post, fc, message).ReceiveJson();
 
