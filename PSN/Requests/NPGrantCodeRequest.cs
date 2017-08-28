@@ -2,8 +2,6 @@
 using Flurl.Http;
 using PSN.Exceptions;
 using System.Net;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace PSN.Requests
 {
@@ -41,7 +39,7 @@ namespace PSN.Requests
                 //For now, the try catch will just throw an empty exception.
 
                 //Decode the encoded URI
-                string uri = HttpUtility.UrlDecode(response.RequestMessage.RequestUri.AbsoluteUri);
+                string uri = WebUtility.UrlDecode(response.RequestMessage.RequestUri.AbsoluteUri);
                 //Grab the code from the URL
                 string code = uri.Remove(0, uri.IndexOf("code=") + "code=".Length);
                 code = code.Substring(0, code.IndexOf("&"));
