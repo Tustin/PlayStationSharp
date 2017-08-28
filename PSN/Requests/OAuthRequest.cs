@@ -38,13 +38,14 @@ namespace PSN.Requests
         /// </summary>
         /// <param name="grant">The grant type obtained in NPGrantCodeRequest</param>
         /// <returns>Instance of OAuthTokens with the authorization and refresh tokens.</returns>
-        public static async Task<OAuthTokens> Make(string grant) {
+        public static OAuthTokens Make(string grant)
+        {
             if (string.IsNullOrEmpty(grant))
                 throw new OAuthTokenNotFoundException("No grant code was supplied");
 
             AuthorizationBearer ab = new AuthorizationBearer();
 
-            dynamic result = await Utilities.SendPostRequest(APIEndpoints.OAUTH_URL,
+            var result = Utilities.SendPostRequest(APIEndpoints.OAUTH_URL,
             new
             {
                 app_context = ab.AppContext,
@@ -54,7 +55,7 @@ namespace PSN.Requests
                 duid = ab.Duid,
                 grant_type = ab.GrantType,
                 scope = ab.Scope
-            }).ReceiveJson();
+            }).ReceiveJson().Result;
 
             if (Utilities.ContainsKey(result, "error"))
                 throw new NpssoIdNotFoundException(result.error_description);
@@ -71,13 +72,14 @@ namespace PSN.Requests
         /// </summary>
         /// <param name="refreshToken">Refresh OAuth token for the account.</param>
         /// <returns>Instance of OAuthTokens with the authorization and refresh tokens.</returns>
-        public static async Task<OAuthTokens> MakeNewTokens(string refreshToken) {
+        public static OAuthTokens MakeNewTokens(string refreshToken)
+        {
             if (string.IsNullOrEmpty(refreshToken))
                 throw new OAuthTokenNotFoundException("No refresh token was supplied");
 
             Refresh r = new Refresh();
 
-            dynamic result = await Utilities.SendPostRequest(APIEndpoints.OAUTH_URL,
+            var result = Utilities.SendPostRequest(APIEndpoints.OAUTH_URL,
             new
             {
                 app_context = r.AppContext,
@@ -87,7 +89,7 @@ namespace PSN.Requests
                 duid = r.Duid,
                 grant_type = r.GrantType,
                 scope = r.Scope
-            }).ReceiveJson();
+            }).ReceiveJson().Result;
 
             if (Utilities.ContainsKey(result, "error"))
                 throw new NpssoIdNotFoundException(result.error_description);

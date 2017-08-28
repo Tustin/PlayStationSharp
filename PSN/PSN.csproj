@@ -66,6 +66,7 @@
     <Compile Include="Extensions\OAuthTokens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requests\AvatarRequest.cs" />
+    <Compile Include="Requests\DualAuthLoginRequest.cs" />
     <Compile Include="Requests\LoginRequest.cs" />
     <Compile Include="Requests\MessageRequest.cs" />
     <Compile Include="Requests\NPGrantCodeRequest.cs" />

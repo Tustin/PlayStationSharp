@@ -19,13 +19,14 @@ namespace PSN.Requests
         /// Execute the initial login request.
         /// </summary>
         /// <returns>NPSSO Id for the next auth step.</returns>
-        public static async Task<string> Make(string username, string password) {
+        public static string Make(string username, string password)
+        {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 throw new NpssoIdNotFoundException("The username or password fields have not been set.");
 
             try
             {
-                dynamic result = await Utilities.SendPostRequest(APIEndpoints.SSO_COOKIE_URL, new
+                var result = Utilities.SendPostRequest(APIEndpoints.SSO_COOKIE_URL, new
                 {
                     authentication_type = AuthenticationType,
                     username = username,
@@ -34,10 +35,20 @@ namespace PSN.Requests
                 }, string.Empty, new
                 {
                     h1 = "Content-Type: application/json",
-                }).ReceiveJson();
+                }).ReceiveJson().Result;
 
                 if (Utilities.ContainsKey(result, "error"))
                     throw new NpssoIdNotFoundException(result.error_description);
+
+
+                //Dual auth is set
+                if (Utilities.ContainsKey(result, "authentication_type"))
+                {
+                    //If the user uses SMS verification, throw exception containing the ticket UUID
+                    //so you can ask the user to supply the code sent to their device.
+                    if (result.challenge_method == "SMS")
+                        throw new DualAuthSMSRequiredException(result.ticket_uuid);
+                }
 
                 return result.npsso;
             }

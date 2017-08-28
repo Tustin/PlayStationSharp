@@ -19,14 +19,15 @@ namespace PSN.Requests
         public static readonly string Scope = "capone:report_submission,psn:sceapp,user:account.get,user:account.settings.privacy.get,user:account.settings.privacy.update,user:account.realName.get,user:account.realName.update,kamaji:get_account_hash,kamaji:ugc:distributor,oauth:manage_device_usercodes";
         public static readonly string ResponseType = "code";
 
-        public static async Task<string> Make(string npsso) {
+        public static string Make(string npsso)
+        {
             if (string.IsNullOrEmpty(npsso))
                 throw new XnpGrantCodeNotFoundException("The NPSSO Id field has not been set.");
             try
             {
                 //I'm going to do the request here because this is a special case.
                 //Need to hardcode this object because for some reason SetQueryParams doesn't take in the fields above automatically.
-                var response = await APIEndpoints.NP_GRANT_URL.SetQueryParams(new
+                var response = APIEndpoints.NP_GRANT_URL.SetQueryParams(new
                 {
                     state = State,
                     duid = Duid,
@@ -34,7 +35,7 @@ namespace PSN.Requests
                     client_id = ClientId,
                     scope = Scope,
                     response_type = ResponseType
-                }).WithCookie(new Cookie("npsso", npsso)).GetAsync();
+                }).WithCookie(new Cookie("npsso", npsso)).GetAsync().Result;
 
                 //TODO: Add exception throwing if we cannot find the code
                 //For now, the try catch will just throw an empty exception.

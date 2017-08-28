@@ -15,8 +15,7 @@ namespace PSN
         public List<string> UsersToInvite { get; protected set; }
         public string MessageText { get; protected set; }
 
-        public User Receiver
-        {
+        public User Receiver {
             get
             {
                 return Receiver;
@@ -33,7 +32,8 @@ namespace PSN
         /// </summary>
         /// <param name="usersToInvite">List of PSN onlineId's to add to the message.</param>
         /// <param name="message">Message to be sent.</param>
-        public Message(List<string> usersToInvite, string message) {
+        public Message(List<string> usersToInvite, string message)
+        {
             this.MessageType = MessageType.MessageText;
             this.UsersToInvite = usersToInvite;
             this.MessageText = message;
@@ -43,7 +43,8 @@ namespace PSN
         /// Creates a new Message object that only adds the current User object to the group chat.
         /// </summary>
         /// <param name="message">Message to be sent.</param>
-        public Message(string message) {
+        public Message(string message)
+        {
             this.MessageType = MessageType.MessageText;
             this.MessageText = message;
             this.UsersToInvite = new List<string>();
