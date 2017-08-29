@@ -26,9 +26,17 @@ namespace PSN
         private Profile GetInfo()
         {
             var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
-                this.AccountTokens.Authorization).ReceiveString().Result;
+                this.AccountTokens.Authorization);
+
+            //bleck
+            var responseJson = response.ReceiveJson().Result;
+            var responseString = response.ReceiveString().Result;
+
+            if (Utilities.ContainsKey(responseJson, "error"))
+                throw new Exception(responseJson.error.message);
+
             //Remove root "profile" element
-            return JsonConvert.DeserializeObject<Profile>(JObject.Parse(response).SelectToken("profile").ToString());
+            return JsonConvert.DeserializeObject<Profile>(JObject.Parse(responseString).SelectToken("profile").ToString());
         }
 
         /// <summary>

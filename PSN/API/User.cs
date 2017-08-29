@@ -24,7 +24,7 @@ namespace PSN
         /// <param name="psn">The PSN onlineId of the user.</param>
         public User(string psn)
         {
-            Profile = Task.Run(() => GetInfo(psn)).Result;
+            Profile = GetInfo(psn);
         }
 
         /// <summary>
@@ -44,9 +44,16 @@ namespace PSN
         private static Profile GetInfo(string psn)
         {
             var response = Utilities.SendGetRequest($"{APIEndpoints.USERS_URL}{psn}/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
-                Auth.CurrentInstance.AccountTokens.Authorization).ReceiveString().Result;
+                Auth.CurrentInstance.AccountTokens.Authorization);
 
-            return JsonConvert.DeserializeObject<Profile>(JObject.Parse(response).SelectToken("profile").ToString());
+            //bleck
+            var responseJson = response.ReceiveJson().Result;
+            var responseString = response.ReceiveString().Result;
+
+            if (Utilities.ContainsKey(responseJson, "error"))
+                throw new Exception(responseJson.error.message);
+
+            return JsonConvert.DeserializeObject<Profile>(JObject.Parse(responseString).SelectToken("profile").ToString());
         }
 
         /// <summary>
