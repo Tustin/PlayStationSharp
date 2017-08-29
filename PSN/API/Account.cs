@@ -5,7 +5,6 @@ using PSN.APIResponses;
 using PSN.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace PSN
 {
