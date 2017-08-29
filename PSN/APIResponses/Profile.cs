@@ -31,9 +31,14 @@ namespace PSN.APIResponses
 
     public class Presence
     {
-        public string onlineStatus { get; set; }
-        public bool hasBroadcastData { get; set; }
-    }
+		public string onlineStatus { get; set; }
+		public string platform { get; set; }
+		public string npTitleId { get; set; }
+		public string titleName { get; set; }
+		public string gameStatus { get; set; }
+		public bool hasBroadcastData { get; set; }
+		public string npTitleIconUrl { get; set; }
+	}
 
     /// <summary>
     /// Information of a user supplied by the API.
