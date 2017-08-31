@@ -23,6 +23,13 @@ namespace PSN.API
             Profile = GetInfo();
         }
 
+		public enum StatusFilter
+		{
+			Online,
+			All
+
+		}
+
         private ProfileResponse GetInfo()
         {
             var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
@@ -79,14 +86,20 @@ namespace PSN.API
         /// <summary>
         /// Fetches each friend of the logged in account.
         /// </summary>
-        /// <param name="filter">A filter to grab online, offline or all friends. Defaults to online.</param>
+        /// <param name="filter">A filter to grab online or all friends. Defaults to online.</param>
         /// <param name="limit">The amount of friends to return. By default, the PSN app uses 36.</param>
         /// <returns>A list of User objects for each friend.</returns>
-        public List<User> GetFriends(string filter = "online", int limit = 36)
+        public List<User> GetFriends(StatusFilter filter = StatusFilter.Online, int limit = 36)
         {
             List<User> friends = new List<User>();
 
-            var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId&userFilter={filter}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
+			var filterQuery = "";
+			if (filter == StatusFilter.Online)
+			{
+				filterQuery = "&userFilter=online";
+			}
+
+            var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId{filterQuery}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
                 this.AccountTokens.Authorization).ReceiveJson<FriendsResponse>().Result;
 
             foreach (ProfileResponse friend in response.Profiles)
