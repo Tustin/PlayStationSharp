@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PSN.APIResponses
+namespace PSN.Responses
 {
 	public class AvatarUrl
 	{
@@ -43,7 +43,7 @@ namespace PSN.APIResponses
 	/// <summary>
 	/// Information of a user supplied by the API.
 	/// </summary>
-	public class Profile
+	public class ProfileResponse
 	{
 		public string onlineId { get; set; }
 		public string npId { get; set; }

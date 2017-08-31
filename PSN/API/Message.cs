@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PSN
+namespace PSN.API
 {
     public enum MessageType
     {

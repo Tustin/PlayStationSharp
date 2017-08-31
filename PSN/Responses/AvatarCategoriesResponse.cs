@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PSN.APIResponses
+namespace PSN.Responses
 {
     public enum AvatarCategoryId
     {
@@ -31,7 +31,7 @@ namespace PSN.APIResponses
         public string CategoryName { get; set; }
     }
 
-    public class AvatarCategories
+    public class AvatarCategoriesResponse
     {
         public int Start { get; set; }
         public int Size { get; set; }

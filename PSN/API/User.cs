@@ -1,22 +1,22 @@
 ﻿using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PSN.APIResponses;
+using PSN.API;
 using PSN.Extensions;
 using PSN.Requests;
+using PSN.Responses;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
-namespace PSN
+namespace PSN.API
 {
     public class User
     {
         /// <summary>
         /// Contains profile information for the user.
         /// </summary>
-        public Profile Profile { get; protected set; }
+        public ProfileResponse Profile { get; protected set; }
 
         /// <summary>
         /// Instantiates a new User object and fetches the profile of the PSN.
@@ -31,7 +31,7 @@ namespace PSN
         /// Instantiates a new User object using a Profile object.
         /// </summary>
         /// <param name="profile">The Profile of the PSN.</param>
-        public User(Profile profile)
+        public User(ProfileResponse profile)
         {
             Profile = profile;
         }
@@ -41,7 +41,7 @@ namespace PSN
         /// </summary>
         /// <param name="psn">The PSN online Id of the user.</param>
         /// <returns>A profile object containing the user's info</returns>
-        private static Profile GetInfo(string psn)
+        private static ProfileResponse GetInfo(string psn)
         {
             var response = Utilities.SendGetRequest($"{APIEndpoints.USERS_URL}{psn}/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
                 Auth.CurrentInstance.AccountTokens.Authorization);
@@ -53,7 +53,7 @@ namespace PSN
             if (Utilities.ContainsKey(responseJson, "error"))
                 throw new Exception(responseJson.error.message);
 
-            return JsonConvert.DeserializeObject<Profile>(JObject.Parse(responseString).SelectToken("profile").ToString());
+            return JsonConvert.DeserializeObject<ProfileResponse>(JObject.Parse(responseString).SelectToken("profile").ToString());
         }
 
         /// <summary>

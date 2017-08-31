@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PSN.APIResponses
+namespace PSN.Responses
 {
     public class ProfilePictureUrl
     {
@@ -8,9 +8,9 @@ namespace PSN.APIResponses
         public string profilePictureUrl { get; set; }
     }
 
-    public class Friends
+    public class FriendsResponse
     {
-        public List<Profile> Profiles { get; set; }
+        public List<ProfileResponse> Profiles { get; set; }
         public int start { get; set; }
         public int size { get; set; }
         public int totalResults { get; set; }

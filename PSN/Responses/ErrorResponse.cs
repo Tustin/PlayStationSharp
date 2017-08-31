@@ -1,4 +1,4 @@
-﻿namespace PSN.APIResponses
+﻿namespace PSN.Responses
 {
     public class Error
     {

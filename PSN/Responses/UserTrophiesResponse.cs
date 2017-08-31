@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PSN.APIResponses
+namespace PSN.Responses
 {
     public partial class TrophyResponses
     {

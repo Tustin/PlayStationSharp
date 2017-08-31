@@ -1,9 +1,9 @@
 ﻿using Flurl.Http;
-using PSN.APIResponses;
+using PSN.API;
+using PSN.Responses;
 using PSN.Extensions;
-using System.Threading.Tasks;
 
-namespace PSN
+namespace PSN.API
 {
     public class Trophies
     {

@@ -1,12 +1,13 @@
 ﻿using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PSN.APIResponses;
+using PSN.API;
+using PSN.Responses;
 using PSN.Extensions;
 using System;
 using System.Collections.Generic;
 
-namespace PSN
+namespace PSN.API
 {
     /// <summary>
     /// Contains information for the currently logged in account.
@@ -14,7 +15,7 @@ namespace PSN
     public class Account
     {
         public OAuthTokens AccountTokens { get; set; }
-        public Profile Profile { get; protected set; }
+        public ProfileResponse Profile { get; protected set; }
 
         public Account(OAuthTokens tokens)
         {
@@ -22,7 +23,7 @@ namespace PSN
             Profile = GetInfo();
         }
 
-        private Profile GetInfo()
+        private ProfileResponse GetInfo()
         {
             var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
                 this.AccountTokens.Authorization);
@@ -35,7 +36,7 @@ namespace PSN
                 throw new Exception(responseJson.error.message);
 
             //Remove root "profile" element
-            return JsonConvert.DeserializeObject<Profile>(JObject.Parse(responseString).SelectToken("profile").ToString());
+            return JsonConvert.DeserializeObject<ProfileResponse>(JObject.Parse(responseString).SelectToken("profile").ToString());
         }
 
         /// <summary>
@@ -85,10 +86,10 @@ namespace PSN
         {
             List<User> friends = new List<User>();
 
-            Friends response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId&userFilter={filter}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
-                this.AccountTokens.Authorization).ReceiveJson<Friends>().Result;
+            var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId&userFilter={filter}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
+                this.AccountTokens.Authorization).ReceiveJson<FriendsResponse>().Result;
 
-            foreach (Profile friend in response.Profiles)
+            foreach (ProfileResponse friend in response.Profiles)
             {
                 friends.Add(new User(friend));
             }
@@ -176,11 +177,11 @@ namespace PSN
         /// <param name="offset">The amount of categories to skip (optional).</param>
         /// <param name="limit">The amount of categories to show (optional).</param>
         /// <returns>An AvatarCategories object containing a list of all categories.</returns>
-        public AvatarCategories GetAvatarCategories(int offset = 0, int limit = 64)
+        public AvatarCategoriesResponse GetAvatarCategories(int offset = 0, int limit = 64)
         {
             //This response shouldn't ever throw an error even if the auth token is invalid. It just won't return then 'Premium Avatars' category.
             var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/avatars/categories?offset={offset}&limit={limit}",
-                this.AccountTokens.Authorization).ReceiveJson<AvatarCategories>().Result;
+                this.AccountTokens.Authorization).ReceiveJson<AvatarCategoriesResponse>().Result;
 
             return response;
         }

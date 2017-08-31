@@ -1,10 +1,11 @@
 ﻿using Flurl.Http;
+using PSN.API;
 using PSN.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PSN.APIResponses
+namespace PSN.Responses
 {
     public class Activity
     {

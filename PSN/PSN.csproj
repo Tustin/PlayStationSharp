@@ -51,16 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="APIResponses\ActivityResponse.cs" />
-    <Compile Include="APIResponses\CompareTrophiesResponse.cs" />
+    <Compile Include="Responses\ActivityResponse.cs" />
+    <Compile Include="Responses\CompareTrophiesResponse.cs" />
     <Compile Include="API\Account.cs" />
     <Compile Include="APIEndpoints.cs" />
-    <Compile Include="APIResponses\AvatarCategories.cs" />
-    <Compile Include="APIResponses\Error.cs" />
-    <Compile Include="APIResponses\Friends.cs" />
-    <Compile Include="APIResponses\Profile.cs" />
-    <Compile Include="APIResponses\GameTrophiesResponse.cs" />
-    <Compile Include="APIResponses\UserTrophiesResponse.cs" />
+    <Compile Include="Responses\AvatarCategoriesResponse.cs" />
+    <Compile Include="Responses\ErrorResponse.cs" />
+    <Compile Include="Responses\FriendsResponse.cs" />
+    <Compile Include="Responses\ProfileResponse.cs" />
+    <Compile Include="Responses\GameTrophiesResponse.cs" />
+    <Compile Include="Responses\UserTrophiesResponse.cs" />
     <Compile Include="API\Auth.cs" />
     <Compile Include="Exceptions\Exceptions.cs" />
     <Compile Include="API\Message.cs" />
