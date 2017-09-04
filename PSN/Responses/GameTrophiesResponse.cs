@@ -25,7 +25,7 @@ namespace PSN.Responses
 
         public class GameTrophiesResponse
         {
-            public List<Trophy> TrophiesList { get; set; }
+            public List<Trophy> trophies { get; set; }
         }
     }
 }
