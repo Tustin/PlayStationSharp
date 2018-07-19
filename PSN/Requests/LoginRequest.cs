@@ -1,9 +1,7 @@
-﻿using Flurl.Http;
-using PSN.Exceptions;
-using PSN.Extensions;
-using System.Threading.Tasks;
+﻿using PSNSharp.Exceptions;
+using PSNSharp.Extensions;
 
-namespace PSN.Requests
+namespace PSNSharp.Requests
 {
     /// <summary>
     /// Class that builds the initial login request
@@ -26,16 +24,13 @@ namespace PSN.Requests
 
             try
             {
-                var result = Utilities.SendPostRequest(APIEndpoints.SSO_COOKIE_URL, new
-                {
-                    authentication_type = AuthenticationType,
-                    username = username,
-                    password = password,
-                    client_id = ClientId
-                }, string.Empty, new
-                {
-                    h1 = "Content-Type: application/json",
-                }).ReceiveJson().Result;
+				var result = Request.SendJsonPostRequestAsync<dynamic>(APIEndpoints.SSO_COOKIE_URL, new
+				{
+					authentication_type = AuthenticationType,
+					username,
+					password,
+					client_id = ClientId
+				});
 
                 if (Utilities.ContainsKey(result, "error"))
                     throw new NpssoIdNotFoundException(result.error_description);

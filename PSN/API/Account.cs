@@ -1,13 +1,9 @@
-﻿using Flurl.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using PSN.API;
-using PSN.Responses;
-using PSN.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PSNSharp.Extensions;
+using PSNSharp.Responses;
 
-namespace PSN.API
+namespace PSNSharp.API
 {
 	/// <summary>
 	/// Contains information for the currently logged in account.
@@ -27,23 +23,12 @@ namespace PSN.API
 		{
 			Online,
 			All
-
 		}
 
 		private ProfileResponse GetInfo()
 		{
-			var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
+			return Request.SendGetRequest<ProfileResponse>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
 				this.AccountTokens.Authorization);
-
-			//bleck
-			var responseJson = response.ReceiveJson().Result;
-			var responseString = response.ReceiveString().Result;
-
-			if (Utilities.ContainsKey(responseJson, "error"))
-				throw new Exception(responseJson.error.message);
-
-			//Remove root "profile" element
-			return JsonConvert.DeserializeObject<ProfileResponse>(JObject.Parse(responseString).SelectToken("profile").ToString());
 		}
 
 		/// <summary>
@@ -56,15 +41,12 @@ namespace PSN.API
 		{
 			object message = (string.IsNullOrEmpty(requestMessage)) ? new object() : new
 			{
-				requestMessage = requestMessage
+				requestMessage
 			};
-			var response = Utilities.SendJsonPostRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/{this.Profile.onlineId}/friendList/{psn}",
-				message, this.AccountTokens.Authorization).ReceiveJson().Result;
 
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
+			var response = Request.SendJsonPostRequestAsync<object>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/{this.Profile.onlineId}/friendList/{psn}", message, this.AccountTokens.Authorization);
 
-			return true;
+			return true; // TODO: Fix me
 		}
 
 		/// <summary>
@@ -74,11 +56,11 @@ namespace PSN.API
 		/// <returns>True if the friend was removed successfully.</returns>
 		public bool RemoveFriend(string psn)
 		{
-			var response = Utilities.SendDeleteRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/{this.Profile.onlineId}/friendList/{psn}",
-				this.AccountTokens.Authorization).ReceiveJson().Result;
+			var response = Request.SendDeleteRequest<object>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/{this.Profile.onlineId}/friendList/{psn}",
+				this.AccountTokens.Authorization);
 
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
+			//if (Utilities.ContainsKey(response, "error"))
+			//	throw new Exception(response.error.message);
 
 			return true;
 		}
@@ -99,8 +81,8 @@ namespace PSN.API
 				filterQuery = "&userFilter=online";
 			}
 
-			var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId{filterQuery}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
-				this.AccountTokens.Authorization).ReceiveJson<FriendsResponse>().Result;
+			var response = Request.SendGetRequest<FriendsResponse>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId{filterQuery}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
+				this.AccountTokens.Authorization);
 
 			foreach (ProfileResponse friend in response.Profiles)
 			{
@@ -118,12 +100,12 @@ namespace PSN.API
 		public bool BlockUser(string psn)
 		{
 			//This service requires the request to be a JSON POST request... not sure why it doesn't accept GET or PUT. So I'll just pass null for the data.
-			var response = Utilities.SendJsonPostRequest($"{APIEndpoints.USERS_URL}{this.Profile.onlineId}/blockList/{psn}",
-				null, this.AccountTokens.Authorization).ReceiveJson().Result;
+			var response = Request.SendJsonPostRequestAsync<object>($"{APIEndpoints.USERS_URL}{this.Profile.onlineId}/blockList/{psn}",
+				null, this.AccountTokens.Authorization);
 
 			//Since we pass null for the JSON POST data, the response likes to be null too...
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
+			//if (Utilities.ContainsKey(response, "error"))
+			//	throw new Exception(response.error.message);
 
 			return true;
 		}
@@ -135,53 +117,13 @@ namespace PSN.API
 		/// <returns>True if user was unblocked.</returns>
 		public bool UnblockUser(string psn)
 		{
-			var response = Utilities.SendDeleteRequest($"{APIEndpoints.USERS_URL}{this.Profile.onlineId}/blockList/{psn}",
-				this.AccountTokens.Authorization).ReceiveJson().Result;
-
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
-
-			return true;
-		}
-
-		/// <summary>
-		/// Sets your current avatar. You must own the avatar for this to set.
-		/// </summary>
-		/// <param name="contentId">The content ID/entitlement ID of the avatar. (ex: "UP4478-CUSA01744_00-AV00000000000059")</param>
-		/// <returns>True if avatar is set successfully. Throws an exception otherwise.</returns>
-		public void SetAvatar(string contentId)
-		{
-			//TODO: Find out why this endpoint constantly gives the "Not Authorized" error...
-			//Update 8/28/2016: I know why this happens, but it's not a big enough problem to make a workaround
-			//Basically the avatar requests require specific permissions that the regular auth token doesn't have
-			//So you need to generate a new set of tokens that have permissions to make requests to the avatar enpoints. Dumb, I know.
-
-			//var response = await Utilities.SendPutRequest($"{APIEndpoints.USERS_URL}me/avatar", new AvatarRequest(contentId), this.AccountTokens.Authorization).ReceiveJson();
+			var response = Request.SendDeleteRequest<object>($"{APIEndpoints.USERS_URL}{this.Profile.onlineId}/blockList/{psn}",
+				this.AccountTokens.Authorization);
 
 			//if (Utilities.ContainsKey(response, "error"))
-			//    throw new Exception(response.error.message);
+			//	throw new Exception(response.error.message);
 
-			//return true;
-
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Gets all avatars for the user.
-		/// </summary>
-		/// <param name="category">Category to get the avatars from.</param>
-		/// <param name="offset">The amount of avatars to skip (optional).</param>
-		/// <param name="limit">The amount of avatars to show (optional).</param>
-		/// <param name="avatarSizes">The size of the avatar to show (optional).</param>
-		/// <returns></returns>
-		public void GetAvatars(AvatarCategoryId category, int offset = 0, int limit = 48, char avatarSizes = 'm')
-		{
-			//TODO: Find out why this endpoint constantly gives the "Not Authorized" error...
-			//Update 8/28/2016: See above method.
-
-			//var response = await Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/avatars/categories/{ (int)category }?offset={offset}&limit={limit}&avatarSizes={avatarSizes}", this.AccountTokens.Authorization).ReceiveString();
-
-			throw new NotImplementedException();
+			return true;
 		}
 
 		/// <summary>
@@ -190,13 +132,15 @@ namespace PSN.API
 		/// <param name="offset">The amount of categories to skip (optional).</param>
 		/// <param name="limit">The amount of categories to show (optional).</param>
 		/// <returns>An AvatarCategories object containing a list of all categories.</returns>
+		[Obsolete("Pointless method. Will be deprecated.")]
 		public AvatarCategoriesResponse GetAvatarCategories(int offset = 0, int limit = 64)
 		{
+			throw new NotImplementedException();
 			//This response shouldn't ever throw an error even if the auth token is invalid. It just won't return then 'Premium Avatars' category.
-			var response = Utilities.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/avatars/categories?offset={offset}&limit={limit}",
-				this.AccountTokens.Authorization).ReceiveJson<AvatarCategoriesResponse>().Result;
+			//var response = Request.SendGetRequest($"https://us-prof.np.community.playstation.net/userProfile/v1/avatars/categories?offset={offset}&limit={limit}",
+			//	this.AccountTokens.Authorization).ReceiveJson<AvatarCategoriesResponse>().Result;
 
-			return response;
+			//return response;
 		}
 
 		/// <summary>
@@ -206,10 +150,8 @@ namespace PSN.API
 		/// <returns></returns>
 		public TrophyResponses.UserTrophiesResponse GetTrophies(int limit = 36)
 		{
-			var response = Utilities.SendGetRequest($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset=0&limit={limit}",
-				this.AccountTokens.Authorization).ReceiveJson<TrophyResponses.UserTrophiesResponse>().Result;
-
-			return response;
+			return Request.SendGetRequest<TrophyResponses.UserTrophiesResponse>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset=0&limit={limit}",
+				this.AccountTokens.Authorization);
 		}
 
 		/// <summary>
@@ -219,11 +161,8 @@ namespace PSN.API
 		/// <returns>True if the trophy was successfully deleted.</returns>
 		public bool DeleteTrophy(string gameContentId)
 		{
-			var response = Utilities.SendDeleteRequest($"https://us-tpy.np.community.playstation.net/trophy/v1/users/{ this.Profile.onlineId }/trophyTitles/{ gameContentId }",
-				this.AccountTokens.Authorization).ReceiveJson().Result;
-
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
+			Request.SendDeleteRequest<object>($"https://us-tpy.np.community.playstation.net/trophy/v1/users/{ this.Profile.onlineId }/trophyTitles/{ gameContentId }",
+				this.AccountTokens.Authorization);
 
 			return true;
 		}

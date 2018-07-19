@@ -1,9 +1,7 @@
-﻿using PSN;
-using PSN.Responses;
-using PSN.Requests;
-using System.Threading.Tasks;
+﻿using PSNSharp.Extensions;
+using PSNSharp.Requests;
 
-namespace PSN.API
+namespace PSNSharp.API
 {
     public class Auth
     {

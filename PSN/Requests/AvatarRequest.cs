@@ -1,4 +1,4 @@
-﻿namespace PSN.Requests
+﻿namespace PSNSharp.Requests
 {
     internal class AvatarRequest
     {

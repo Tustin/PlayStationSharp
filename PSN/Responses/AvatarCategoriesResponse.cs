@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PSN.Responses
+namespace PSNSharp.Responses
 {
     public enum AvatarCategoryId
     {

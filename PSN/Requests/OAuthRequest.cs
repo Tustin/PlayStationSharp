@@ -1,9 +1,7 @@
-﻿using Flurl.Http;
-using PSN.Exceptions;
-using PSN.Extensions;
-using System.Threading.Tasks;
+﻿using PSNSharp.Exceptions;
+using PSNSharp.Extensions;
 
-namespace PSN.Requests
+namespace PSNSharp.Requests
 {
     /// <summary>
     /// Builds the requests for the OAuth tokens.
@@ -45,20 +43,17 @@ namespace PSN.Requests
 
             AuthorizationBearer ab = new AuthorizationBearer();
 
-            var result = Utilities.SendPostRequest(APIEndpoints.OAUTH_URL,
-            new
-            {
-                app_context = ab.AppContext,
-                client_id = ab.ClientId,
-                client_secret = ab.ClientSecret,
-                code = grant,
-                duid = ab.Duid,
-                grant_type = ab.GrantType,
-                scope = ab.Scope
-            }).ReceiveJson().Result;
-
-            if (Utilities.ContainsKey(result, "error"))
-                throw new NpssoIdNotFoundException(result.error_description);
+			var result = Request.SendPostRequest<dynamic>(APIEndpoints.OAUTH_URL,
+			new
+			{
+				app_context = ab.AppContext,
+				client_id = ab.ClientId,
+				client_secret = ab.ClientSecret,
+				code = grant,
+				duid = ab.Duid,
+				grant_type = ab.GrantType,
+				scope = ab.Scope
+			});
 
             return new OAuthTokens()
             {
@@ -79,20 +74,18 @@ namespace PSN.Requests
 
             Refresh r = new Refresh();
 
-            var result = Utilities.SendPostRequest(APIEndpoints.OAUTH_URL,
-            new
-            {
-                app_context = r.AppContext,
-                client_id = r.ClientId,
-                client_secret = r.ClientSecret,
-                refresh_token = refreshToken,
-                duid = r.Duid,
-                grant_type = r.GrantType,
-                scope = r.Scope
-            }).ReceiveJson().Result;
-
-            if (Utilities.ContainsKey(result, "error"))
-                throw new NpssoIdNotFoundException(result.error_description);
+			// TODO: Why aren't these properties static??
+			var result = Request.SendPostRequest<dynamic>(APIEndpoints.OAUTH_URL,
+			new
+			{
+				app_context = r.AppContext,
+				client_id = r.ClientId,
+				client_secret = r.ClientSecret,
+				refresh_token = refreshToken,
+				duid = r.Duid,
+				grant_type = r.GrantType,
+				scope = r.Scope
+			});
 
             return new OAuthTokens()
             {

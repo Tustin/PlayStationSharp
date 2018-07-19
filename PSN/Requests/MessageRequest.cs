@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using Newtonsoft.Json;
 
-namespace PSN.Requests
+namespace PSNSharp.Requests
 {
     public class MessageData
     {

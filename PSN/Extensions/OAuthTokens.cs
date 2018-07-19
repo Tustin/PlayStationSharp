@@ -1,4 +1,4 @@
-﻿namespace PSN
+﻿namespace PSNSharp.Extensions
 {
     public class OAuthTokens
     {

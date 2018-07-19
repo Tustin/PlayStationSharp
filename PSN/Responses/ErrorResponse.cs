@@ -1,4 +1,4 @@
-﻿namespace PSN.Responses
+﻿namespace PSNSharp.Responses
 {
     public class Error
     {

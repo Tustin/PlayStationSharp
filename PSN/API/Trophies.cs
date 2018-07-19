@@ -1,11 +1,6 @@
-﻿using Flurl.Http;
-using PSN.API;
-using PSN.Responses;
-using PSN.Extensions;
-using System.Text.RegularExpressions;
-using System.IO;
+﻿using PSNSharp.Responses;
 
-namespace PSN.API
+namespace PSNSharp.API
 {
 	public class Trophies
 	{
@@ -16,8 +11,8 @@ namespace PSN.API
 		/// <returns>GameTrophiesResponse object containing a list of all the trophies.</returns>
 		public static TrophyResponses.GameTrophiesResponse GetGameTrophies(string gameContentId)
 		{
-			return Utilities.SendGetRequest($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles/{gameContentId}/trophyGroups/all/trophies?fields=@default,trophyRare,trophyEarnedRate&npLanguage=en&sortKey=trophyId&iconSize=m",
-				Auth.CurrentInstance.AccountTokens.Authorization).ReceiveJson<TrophyResponses.GameTrophiesResponse>().Result;
+			return Request.SendGetRequest<TrophyResponses.GameTrophiesResponse>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles/{gameContentId}/trophyGroups/all/trophies?fields=@default,trophyRare,trophyEarnedRate&npLanguage=en&sortKey=trophyId&iconSize=m",
+				Auth.CurrentInstance.AccountTokens.Authorization);
 		}
 	}
 }
