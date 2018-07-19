@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using PSNSharp.Extensions;
-using PSNSharp.Responses;
+using PlayStationSharp.Extensions;
+using PlayStationSharp.Responses;
 
-namespace PSNSharp.API
+namespace PlayStationSharp.API
 {
 	/// <summary>
 	/// Contains information for the currently logged in account.

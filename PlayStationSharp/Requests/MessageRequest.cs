@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace PSNSharp.Requests
+namespace PlayStationSharp.Requests
 {
     public class MessageData
     {

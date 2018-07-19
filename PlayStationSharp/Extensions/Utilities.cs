@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 
-namespace PSNSharp.Extensions
+namespace PlayStationSharp.Extensions
 {
 	/// <summary>
 	/// Utilities used throughout the project

@@ -1,4 +1,4 @@
-﻿namespace PSNSharp.Extensions
+﻿namespace PlayStationSharp.Extensions
 {
     public class OAuthTokens
     {

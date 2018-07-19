@@ -1,6 +1,6 @@
-﻿using PSNSharp.Responses;
+﻿using PlayStationSharp.Responses;
 
-namespace PSNSharp.API
+namespace PlayStationSharp.API
 {
 	public class Trophies
 	{

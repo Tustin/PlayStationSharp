@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using Flurl;
 using Flurl.Http;
-using PSNSharp.Exceptions;
+using PlayStationSharp.Exceptions;
 
-namespace PSNSharp.Requests
+namespace PlayStationSharp.Requests
 {
     /// <summary>
     /// Builds and sends the request for the X-NP-GRANT-CODE

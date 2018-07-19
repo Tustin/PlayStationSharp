@@ -1,7 +1,7 @@
-﻿using PSNSharp.Exceptions;
-using PSNSharp.Extensions;
+﻿using PlayStationSharp.Exceptions;
+using PlayStationSharp.Extensions;
 
-namespace PSNSharp.Requests
+namespace PlayStationSharp.Requests
 {
     /// <summary>
     /// Builds the requests for the OAuth tokens.

@@ -1,4 +1,4 @@
-﻿namespace PSNSharp
+﻿namespace PlayStationSharp
 {
     public static class APIEndpoints
     {

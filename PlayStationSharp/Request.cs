@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using Flurl.Http;
 
-namespace PSNSharp
+namespace PlayStationSharp
 {
 	public static class Request
 	{

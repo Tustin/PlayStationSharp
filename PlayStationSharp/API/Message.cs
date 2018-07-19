@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PSNSharp.API
+namespace PlayStationSharp.API
 {
     public enum MessageType
     {

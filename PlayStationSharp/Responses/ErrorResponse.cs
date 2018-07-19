@@ -1,4 +1,4 @@
-﻿namespace PSNSharp.Responses
+﻿namespace PlayStationSharp.Responses
 {
     public class Error
     {

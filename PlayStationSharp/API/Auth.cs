@@ -1,7 +1,7 @@
-﻿using PSNSharp.Extensions;
-using PSNSharp.Requests;
+﻿using PlayStationSharp.Extensions;
+using PlayStationSharp.Requests;
 
-namespace PSNSharp.API
+namespace PlayStationSharp.API
 {
     public class Auth
     {

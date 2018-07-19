@@ -1,6 +1,6 @@
-﻿using PSNSharp.Exceptions;
+﻿using PlayStationSharp.Exceptions;
 
-namespace PSNSharp.Requests
+namespace PlayStationSharp.Requests
 {
 	public class DualAuthLoginRequest
 	{

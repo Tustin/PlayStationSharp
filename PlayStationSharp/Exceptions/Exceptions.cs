@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PSNSharp.Exceptions
+namespace PlayStationSharp.Exceptions
 {
     [Serializable]
     public class NpssoIdNotFoundException : Exception

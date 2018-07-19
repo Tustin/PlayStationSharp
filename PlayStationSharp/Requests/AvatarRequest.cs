@@ -1,4 +1,4 @@
-﻿namespace PSNSharp.Requests
+﻿namespace PlayStationSharp.Requests
 {
     internal class AvatarRequest
     {

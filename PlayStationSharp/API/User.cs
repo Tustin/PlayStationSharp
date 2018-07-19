@@ -1,8 +1,8 @@
 ﻿using System;
-using PSNSharp.Extensions;
-using PSNSharp.Responses;
+using PlayStationSharp.Extensions;
+using PlayStationSharp.Responses;
 
-namespace PSNSharp.API
+namespace PlayStationSharp.API
 {
     public class User
     {

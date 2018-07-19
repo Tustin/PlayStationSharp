@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PSNSharp.API;
+using PlayStationSharp.API;
 
-namespace PSNSharp.Responses
+namespace PlayStationSharp.Responses
 {
 	public class Activity
 	{
