@@ -1,4 +1,4 @@
-﻿using PlayStationSharp.Exceptions;
+﻿using PlayStationSharp.Exceptions.Auth;
 using PlayStationSharp.Extensions;
 
 namespace PlayStationSharp.Requests

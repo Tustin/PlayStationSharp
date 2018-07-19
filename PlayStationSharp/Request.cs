@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using Flurl.Http;
 
 namespace PlayStationSharp
@@ -16,10 +17,18 @@ namespace PlayStationSharp
 		/// <returns>HttpResponseMessage object to be read.</returns>
 		public static T SendGetRequest<T>(string url, string oAuthToken = "", object data = null, object headers = null, object cookies = null) where T : class
 		{
-			return url
-				.WithOAuthBearerToken(oAuthToken)
-				.GetAsync()
-				.ReceiveJson<T>().Result;
+			try
+			{
+				return url
+					.WithOAuthBearerToken(oAuthToken)
+					.GetAsync()
+					.ReceiveJson<T>().Result;
+			}
+			catch (FlurlHttpException)
+			{
+				throw;
+			}
+
 
 			//if (ContainsKey(response.Content, "error"))
 			//	throw new Exception(response.error.message);
@@ -39,10 +48,18 @@ namespace PlayStationSharp
 		/// <returns>HttpResponseMessage object to be read.</returns>
 		public static T SendPostRequest<T>(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) where T : class
 		{
-			return url
-				.WithOAuthBearerToken(oAuthToken)
-				.PostUrlEncodedAsync(data)
-				.ReceiveJson<T>().Result;
+			try
+			{
+				return url
+					.WithOAuthBearerToken(oAuthToken)
+					.PostUrlEncodedAsync(data)
+					.ReceiveJson<T>().Result;
+			}
+			catch (FlurlHttpException)
+			{
+				throw;
+			}
+
 			//IFlurlClient fc = SetupRequest(HttpMethod.Post, url, oAuthToken, data, headers, cookies);
 
 			//return fc.PostUrlEncodedAsync(data);
@@ -59,13 +76,18 @@ namespace PlayStationSharp
 		/// <returns>HttpResponseMessage object to be read.</returns>
 		public static T SendJsonPostRequestAsync<T>(string url, object data, string oAuthToken = "") where T : class
 		{
-			return url
-				.WithOAuthBearerToken(oAuthToken)
-				.PostJsonAsync(data)
-				.ReceiveJson<T>().Result;
-			//IFlurlClient fc = SetupRequest(HttpMethod.Post, url, oAuthToken, data, headers, cookies);
-
-			//return fc.PostJsonAsync(data);
+			try
+			{
+				return url
+					.WithOAuthBearerToken(oAuthToken)
+					.PostJsonAsync(data)
+					.ReceiveJson<T>().Result;
+			}
+			catch (AggregateException ae)
+			{
+				ae.Handle(ex => throw ex);
+				throw;
+			}
 		}
 
 		/// <summary>
@@ -78,10 +100,18 @@ namespace PlayStationSharp
 		/// <returns>HttpResponseMessage object to be read.</returns>
 		public static T SendDeleteRequest<T>(string url, string oAuthToken = "", object headers = null, object cookies = null) where T : class
 		{
-			return url
-				.WithOAuthBearerToken(oAuthToken)
-				.DeleteAsync()
-				.ReceiveJson<T>().Result;
+			try
+			{
+				return url
+					.WithOAuthBearerToken(oAuthToken)
+					.DeleteAsync()
+					.ReceiveJson<T>().Result;
+			}
+			catch (FlurlHttpException)
+			{
+				throw;
+			}
+
 			//IFlurlClient fc = SetupRequest(HttpMethod.Delete, url, oAuthToken, null, headers, cookies);
 
 			//return fc.DeleteAsync();
@@ -98,10 +128,18 @@ namespace PlayStationSharp
 		/// <returns>HttpResponseMessage object to be read.</returns>
 		public static T SendPutRequest<T>(string url, HttpContent data, string oAuthToken = "") where T : class
 		{
-			return url
-				.WithOAuthBearerToken(oAuthToken)
-				.PutAsync(data)
-				.ReceiveJson<T>().Result;
+			try
+			{
+				return url
+					.WithOAuthBearerToken(oAuthToken)
+					.PutAsync(data)
+					.ReceiveJson<T>().Result;
+			}
+			catch (FlurlHttpException)
+			{
+				throw;
+			}
+
 			//IFlurlClient fc = SetupRequest(HttpMethod.Put, url, oAuthToken, data, headers, cookies);
 
 			////This API shouldn't have a service for PUTting non-JSON data.

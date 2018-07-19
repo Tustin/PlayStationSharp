@@ -1,29 +1,35 @@
-﻿using PlayStationSharp.Exceptions;
+﻿using System;
+using System.Net;
+using System.Security.Authentication;
+using Flurl.Http;
+using PlayStationSharp.Exceptions;
+using PlayStationSharp.Exceptions.Auth;
 using PlayStationSharp.Extensions;
+using PlayStationSharp.Model;
 
 namespace PlayStationSharp.Requests
 {
-    /// <summary>
-    /// Class that builds the initial login request
-    /// </summary>
-    public static class LoginRequest
-    {
-        public static readonly string AuthenticationType = "password";
-        public static string Username { get; set; }
-        public static string Password { get; set; }
-        public static readonly string ClientId = "71a7beb8-f21a-47d9-a604-2e71bee24fe0";
+	/// <summary>
+	/// Class that builds the initial login request
+	/// </summary>
+	public static class LoginRequest
+	{
+		public static readonly string AuthenticationType = "password";
+		public static string Username { get; set; }
+		public static string Password { get; set; }
+		public static readonly string ClientId = "71a7beb8-f21a-47d9-a604-2e71bee24fe0";
 
-        /// <summary>
-        /// Execute the initial login request.
-        /// </summary>
-        /// <returns>NPSSO Id for the next auth step.</returns>
-        public static string Make(string username, string password)
-        {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                throw new NpssoIdNotFoundException("The username or password fields have not been set.");
+		/// <summary>
+		/// Execute the initial login request.
+		/// </summary>
+		/// <returns>NPSSO Id for the next auth step.</returns>
+		public static string Create(string username, string password)
+		{
+			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+				throw new ArgumentException("The username or password fields have not been set.");
 
-            try
-            {
+			try
+			{
 				var result = Request.SendJsonPostRequestAsync<dynamic>(APIEndpoints.SSO_COOKIE_URL, new
 				{
 					authentication_type = AuthenticationType,
@@ -32,22 +38,35 @@ namespace PlayStationSharp.Requests
 					client_id = ClientId
 				});
 
-                if (Utilities.ContainsKey(result, "error"))
-                    throw new NpssoIdNotFoundException(result.error_description);
+				// Dual auth is set
+				if (Utilities.ContainsKey(result, "authentication_type"))
+				{
+					// If the user uses SMS verification, throw exception containing the ticket UUID
+					// so you can ask the user to supply the code sent to their device.
+					if (result.challenge_method == "SMS")
+						throw new DualAuthSMSRequiredException(result.ticket_uuid);
+				}
 
+				return result.npsso;
+			}
+			catch (NpssoIdNotFoundException e)
+			{
+				throw new NpssoIdNotFoundException(e.Message);
+			}
+			catch (FlurlHttpException ex)
+			{
+				var error = ex.GetResponseJsonAsync<ErrorModel>().Result;
 
-                //Dual auth is set
-                if (Utilities.ContainsKey(result, "authentication_type"))
-                {
-                    //If the user uses SMS verification, throw exception containing the ticket UUID
-                    //so you can ask the user to supply the code sent to their device.
-                    if (result.challenge_method == "SMS")
-                        throw new DualAuthSMSRequiredException(result.ticket_uuid);
-                }
-
-                return result.npsso;
-            }
-            catch (NpssoIdNotFoundException e) { throw new NpssoIdNotFoundException(e.Message); }
-        }
-    }
+				switch (error.ErrorCode)
+				{
+					case 20:
+						throw new InvalidCredentialException($"Invalid credentials for {username}");
+					case 4097:
+						throw new CaptchaTokenMissingException();
+					default:
+						throw new GenericAuthException(error.ErrorDescription);
+				}
+			}
+		}
+	}
 }

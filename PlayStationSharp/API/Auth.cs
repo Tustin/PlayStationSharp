@@ -19,7 +19,7 @@ namespace PlayStationSharp.API
         /// <returns>An instance of the Account class for your account.</returns>
         public static Account Login(string email, string password)
         {
-            string npsso = LoginRequest.Make(email, password);
+            string npsso = LoginRequest.Create(email, password);
             string grantCode = NpGrantCodeRequest.Make(npsso);
             OAuthTokens tokens = OAuthRequest.Make(grantCode);
             Account a = new Account(tokens);

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using PlayStationSharp.API;
 
-namespace PlayStationSharp.Responses
+namespace PlayStationSharp.Model
 {
 	public class Activity
 	{

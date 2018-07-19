@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Flurl;
 using Flurl.Http;
-using PlayStationSharp.Exceptions;
+using PlayStationSharp.Exceptions.Auth;
 
 namespace PlayStationSharp.Requests
 {

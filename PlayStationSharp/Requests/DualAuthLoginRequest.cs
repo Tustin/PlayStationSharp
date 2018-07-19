@@ -1,4 +1,8 @@
-﻿using PlayStationSharp.Exceptions;
+﻿using System.Security.Authentication;
+using Flurl.Http;
+using PlayStationSharp.Exceptions;
+using PlayStationSharp.Exceptions.Auth;
+using PlayStationSharp.Model;
 
 namespace PlayStationSharp.Requests
 {
@@ -14,7 +18,6 @@ namespace PlayStationSharp.Requests
 
 			try
 			{
-				// TODO: Stop using dynamic
 				var result = Request.SendJsonPostRequestAsync<dynamic>(APIEndpoints.SSO_COOKIE_URL, new
 				{
 					authentication_type = AuthenticationType,
@@ -29,6 +32,18 @@ namespace PlayStationSharp.Requests
 				return result.npsso;
 			}
 			catch (NpssoIdNotFoundException e) { throw new NpssoIdNotFoundException(e.Message); }
+			catch (FlurlHttpException ex)
+			{
+				var error = ex.GetResponseJsonAsync<ErrorModel>().Result;
+
+				switch (error.ErrorCode)
+				{
+					case 4420:
+						throw new InvalidTwoStepCredentialsException();
+					default:
+						throw new GenericAuthException(error.ErrorDescription);
+				}
+			}
 		}
 	}
 }

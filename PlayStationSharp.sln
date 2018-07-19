@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayStationSharp", "PlayStationSharp\PlayStationSharp.csproj", "{9AE81169-D241-4A98-90F6-EFEEF37E5201}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayStationSharp.UnitTests", "PlayStationSharp.UnitTests\PlayStationSharp.UnitTests.csproj", "{96394082-A189-4974-B955-E3CDD5E0B892}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{9AE81169-D241-4A98-90F6-EFEEF37E5201}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AE81169-D241-4A98-90F6-EFEEF37E5201}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AE81169-D241-4A98-90F6-EFEEF37E5201}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96394082-A189-4974-B955-E3CDD5E0B892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96394082-A189-4974-B955-E3CDD5E0B892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96394082-A189-4974-B955-E3CDD5E0B892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96394082-A189-4974-B955-E3CDD5E0B892}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2A34300-C763-415C-953C-440C3FA28326}
 	EndGlobalSection
 EndGlobal

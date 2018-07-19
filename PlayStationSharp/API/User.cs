@@ -1,6 +1,6 @@
 ﻿using System;
 using PlayStationSharp.Extensions;
-using PlayStationSharp.Responses;
+using PlayStationSharp.Model;
 
 namespace PlayStationSharp.API
 {

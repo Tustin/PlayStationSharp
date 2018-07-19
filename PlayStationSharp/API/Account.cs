@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PlayStationSharp.Extensions;
-using PlayStationSharp.Responses;
+using PlayStationSharp.Model;
 
 namespace PlayStationSharp.API
 {

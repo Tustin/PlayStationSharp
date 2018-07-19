@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PlayStationSharp.Responses
+namespace PlayStationSharp.Model
 {
     public partial class TrophyResponses
     {

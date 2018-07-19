@@ -7,8 +7,8 @@
     <ProjectGuid>{9AE81169-D241-4A98-90F6-EFEEF37E5201}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PSN</RootNamespace>
-    <AssemblyName>PSN</AssemblyName>
+    <RootNamespace>PlayStationSharp</RootNamespace>
+    <AssemblyName>PlayStationSharp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -51,24 +51,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\Auth\CaptchaTokenMissingException.cs" />
+    <Compile Include="Exceptions\Auth\DualAuthSMSRequiredException.cs" />
+    <Compile Include="Exceptions\Auth\GenericAuthException.cs" />
+    <Compile Include="Exceptions\Auth\InvalidCredentialsException.cs" />
+    <Compile Include="Exceptions\Auth\OAuthTokenNotFoundException.cs" />
+    <Compile Include="Exceptions\Auth\NpssoIdNotFoundException.cs" />
+    <Compile Include="Exceptions\PlayStationApiException.cs" />
+    <Compile Include="Exceptions\Auth\XnpGrantCodeNotFoundException.cs" />
     <Compile Include="Request.cs" />
-    <Compile Include="Responses\ActivityResponse.cs" />
-    <Compile Include="Responses\CompareTrophiesResponse.cs" />
+    <Compile Include="Model\ActivityModel.cs" />
+    <Compile Include="Model\CompareTrophiesModel.cs" />
     <Compile Include="API\Account.cs" />
     <Compile Include="APIEndpoints.cs" />
-    <Compile Include="Responses\AvatarCategoriesResponse.cs" />
-    <Compile Include="Responses\ErrorResponse.cs" />
-    <Compile Include="Responses\FriendsResponse.cs" />
-    <Compile Include="Responses\ProfileResponse.cs" />
-    <Compile Include="Responses\GameTrophiesResponse.cs" />
-    <Compile Include="Responses\UserTrophiesResponse.cs" />
+    <Compile Include="Model\AvatarCategoriesModel.cs" />
+    <Compile Include="Model\ErrorModel.cs" />
+    <Compile Include="Model\FriendsModel.cs" />
+    <Compile Include="Model\ProfileModel.cs" />
+    <Compile Include="Model\GameTrophiesModel.cs" />
+    <Compile Include="Model\UserTrophiesModel.cs" />
     <Compile Include="API\Auth.cs" />
-    <Compile Include="Exceptions\Exceptions.cs" />
     <Compile Include="API\Message.cs" />
     <Compile Include="Extensions\OAuthTokens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requests\AvatarRequest.cs" />
     <Compile Include="Requests\DualAuthLoginRequest.cs" />
+    <Compile Include="Exceptions\Auth\InvalidTwoStepCredentialsException.cs" />
     <Compile Include="Requests\LoginRequest.cs" />
     <Compile Include="Requests\MessageRequest.cs" />
     <Compile Include="Requests\NPGrantCodeRequest.cs" />
