@@ -1,5 +1,5 @@
 # PlayStationSharp
-A PSN API wrapper for C#.
+A C# library for the PlayStation API.
 
 ## Usage
 Will add soon once refactor is finished.
