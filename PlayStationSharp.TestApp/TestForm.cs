@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PlayStationSharp.API;
 
-namespace PlayStarionSharp.TestApp
+namespace PlayStationSharp.TestApp
 {
 	public partial class TestForm : Form
 	{

@@ -1,4 +1,4 @@
-﻿namespace PlayStarionSharp.TestApp
+﻿namespace PlayStationSharp.TestApp
 {
 	partial class TestForm
 	{

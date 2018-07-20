@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlayStarionSharp.TestApp.Properties
+namespace PlayStationSharp.TestApp.Properties
 {
 
 

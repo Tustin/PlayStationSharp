@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayStationSharp", "PlaySta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayStationSharp.UnitTests", "PlayStationSharp.UnitTests\PlayStationSharp.UnitTests.csproj", "{96394082-A189-4974-B955-E3CDD5E0B892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayStarionSharp.TestApp", "PlayStarionSharp.TestApp\PlayStarionSharp.TestApp.csproj", "{A546C307-F0F9-4F06-9D48-AAAF50825097}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayStationSharp.TestApp", "PlayStationSharp.TestApp\PlayStationSharp.TestApp.csproj", "{A546C307-F0F9-4F06-9D48-AAAF50825097}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
