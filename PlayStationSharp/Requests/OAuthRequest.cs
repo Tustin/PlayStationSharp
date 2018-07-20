@@ -14,12 +14,14 @@ namespace PlayStationSharp.Requests
         private class AuthorizationBearer
         {
             public readonly string AppContext = "inapp_ios";
-            public readonly string ClientId = "b7cbf451-6bb6-4a5a-8913-71e61f462787";
-            public readonly string ClientSecret = "zsISsjmCx85zgCJg";
+            public readonly string ClientId = "ebee17ac-99fd-487c-9b1e-18ef50c39ab5";
+            public readonly string ClientSecret = "e4Ru_s*LrL4_B2BD";
             public string Code { get; set; }
             public readonly string Duid = "0000000d000400808F4B3AA3301B4945B2E3636E38C0DDFC";
             public readonly string GrantType = "authorization_code";
-            public readonly string Scope = "capone:report_submission,psn:sceapp,user:account.get,user:account.settings.privacy.get,user:account.settings.privacy.update,user:account.realName.get,user:account.realName.update,kamaji:get_account_hash,kamaji:ugc:distributor,oauth:manage_device_usercodes";
+            public readonly string Scope = "kamaji:get_players_met kamaji:get_account_hash kamaji:activity_feed_submit_feed_story kamaji:activity_feed_internal_feed_submit_story kamaji:activity_feed_get_news_feed kamaji:communities kamaji:game_list kamaji:ugc:distributor oauth:manage_device_usercodes psn:sceapp user:account.profile.get user:account.attributes.validate user:account.settings.privacy.get kamaji:activity_feed_set_feed_privacy kamaji:satchel kamaji:satchel_delete user:account.profile.update";
+	        public readonly string RedirectUri = "com.playstation.PlayStationApp://redirect";
+
         }
 
         /// <summary>
@@ -52,7 +54,8 @@ namespace PlayStationSharp.Requests
 				code = grant,
 				duid = ab.Duid,
 				grant_type = ab.GrantType,
-				scope = ab.Scope
+				scope = ab.Scope,
+				redirect_uri = ab.RedirectUri
 			});
 
             return new OAuthTokens()

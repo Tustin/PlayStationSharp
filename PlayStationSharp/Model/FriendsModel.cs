@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using PlayStationSharp.Model.ProfileJsonTypes;
 
 namespace PlayStationSharp.Model
 {
-    public class ProfilePictureUrl
+    public class FriendsModel
     {
-        public string size { get; set; }
-        public string profilePictureUrl { get; set; }
-    }
+	    [JsonProperty("profiles")]
+	    public IList<ProfileModel> Profiles { get; set; }
 
-    public class FriendsResponse
-    {
-        public List<ProfileResponse> Profiles { get; set; }
-        public int start { get; set; }
-        public int size { get; set; }
-        public int totalResults { get; set; }
-    }
+	    [JsonProperty("start")]
+	    public int Start { get; set; }
+
+	    [JsonProperty("size")]
+	    public int Size { get; set; }
+
+	    [JsonProperty("totalResults")]
+	    public int TotalResults { get; set; }
+	}
 }

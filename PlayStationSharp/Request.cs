@@ -24,8 +24,9 @@ namespace PlayStationSharp
 					.GetAsync()
 					.ReceiveJson<T>().Result;
 			}
-			catch (FlurlHttpException)
+			catch (AggregateException ae)
 			{
+				ae.Handle(ex => throw ex);
 				throw;
 			}
 
@@ -55,8 +56,9 @@ namespace PlayStationSharp
 					.PostUrlEncodedAsync(data)
 					.ReceiveJson<T>().Result;
 			}
-			catch (FlurlHttpException)
+			catch (AggregateException ae)
 			{
+				ae.Handle(ex => throw ex);
 				throw;
 			}
 
@@ -107,8 +109,9 @@ namespace PlayStationSharp
 					.DeleteAsync()
 					.ReceiveJson<T>().Result;
 			}
-			catch (FlurlHttpException)
+			catch (AggregateException ae)
 			{
+				ae.Handle(ex => throw ex);
 				throw;
 			}
 
@@ -123,8 +126,6 @@ namespace PlayStationSharp
 		/// <param name="url">The URL of the service to be requested.</param>
 		/// <param name="data">The POST data for the service.</param>
 		/// <param name="oAuthToken">The Authorization Bearer for the service if it requires authentication (optional).</param>
-		/// <param name="headers">Headers to be sent with the request to the service (optional).</param>
-		/// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
 		/// <returns>HttpResponseMessage object to be read.</returns>
 		public static T SendPutRequest<T>(string url, HttpContent data, string oAuthToken = "") where T : class
 		{
@@ -135,8 +136,9 @@ namespace PlayStationSharp
 					.PutAsync(data)
 					.ReceiveJson<T>().Result;
 			}
-			catch (FlurlHttpException)
+			catch (AggregateException ae)
 			{
+				ae.Handle(ex => throw ex);
 				throw;
 			}
 

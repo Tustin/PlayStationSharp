@@ -16,7 +16,7 @@ namespace PlayStationSharp.Model
         {
             public string onlineId { get; set; }
             public int progress { get; set; }
-            public EarnedTrophies earnedTrophies { get; set; }
+            //public EarnedTrophies earnedTrophies { get; set; }
             public bool hiddenFlag { get; set; }
             public string lastUpdateDate { get; set; }
         }

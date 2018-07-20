@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Net;
 using System.Security.Authentication;
 using Flurl.Http;
-using PlayStationSharp.Exceptions;
 using PlayStationSharp.Exceptions.Auth;
 using PlayStationSharp.Extensions;
 using PlayStationSharp.Model;

@@ -23,7 +23,7 @@ namespace PlayStationSharp.API
             set
             {
                 //Add the person we're messaging to the list of users so it actually sends it to them.
-                UsersToInvite.Add(value.Profile.onlineId);
+                UsersToInvite.Add(value.Profile.OnlineId);
             }
         }
 
