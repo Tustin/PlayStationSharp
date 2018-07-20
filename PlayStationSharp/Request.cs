@@ -12,10 +12,8 @@ namespace PlayStationSharp
 		/// <param name="url">The URL of the service to be requested.</param>
 		/// <param name="oAuthToken">The Authorization Bearer for the service if it requires authentication (optional).</param>
 		/// <param name="data">The GET data for the service.</param>
-		/// <param name="headers">Headers to be sent with the request to the service (optional).</param>
-		/// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
 		/// <returns>HttpResponseMessage object to be read.</returns>
-		public static T SendGetRequest<T>(string url, string oAuthToken = "", object data = null, object headers = null, object cookies = null) where T : class
+		public static T SendGetRequest<T>(string url, string oAuthToken = "", object data = null) where T : class
 		{
 			try
 			{
@@ -29,13 +27,6 @@ namespace PlayStationSharp
 				ae.Handle(ex => throw ex);
 				throw;
 			}
-
-
-			//if (ContainsKey(response.Content, "error"))
-			//	throw new Exception(response.error.message);
-			//IFlurlClient fc = SetupRequest(HttpMethod.Get, url, oAuthToken, data, headers, cookies);
-
-			//return fc.GetAsync();
 		}
 
 		/// <summary>
@@ -44,10 +35,8 @@ namespace PlayStationSharp
 		/// <param name="url">The URL of the service to be requested.</param>
 		/// <param name="data">The POST data for the service.</param>
 		/// <param name="oAuthToken">The Authorization Bearer for the service if it requires authentication (optional).</param>
-		/// <param name="headers">Headers to be sent with the request to the service (optional).</param>
-		/// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
 		/// <returns>HttpResponseMessage object to be read.</returns>
-		public static T SendPostRequest<T>(string url, object data, string oAuthToken = "", object headers = null, object cookies = null) where T : class
+		public static T SendPostRequest<T>(string url, object data, string oAuthToken = "") where T : class
 		{
 			try
 			{
@@ -61,10 +50,6 @@ namespace PlayStationSharp
 				ae.Handle(ex => throw ex);
 				throw;
 			}
-
-			//IFlurlClient fc = SetupRequest(HttpMethod.Post, url, oAuthToken, data, headers, cookies);
-
-			//return fc.PostUrlEncodedAsync(data);
 		}
 
 		/// <summary>
@@ -73,8 +58,6 @@ namespace PlayStationSharp
 		/// <param name="url">The URL of the service to be requested.</param>
 		/// <param name="data">The POST data for the service.</param>
 		/// <param name="oAuthToken">The Authorization Bearer for the service if it requires authentication (optional).</param>
-		/// <param name="headers">Headers to be sent with the request to the service (optional).</param>
-		/// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
 		/// <returns>HttpResponseMessage object to be read.</returns>
 		public static T SendJsonPostRequestAsync<T>(string url, object data, string oAuthToken = "") where T : class
 		{
@@ -97,10 +80,8 @@ namespace PlayStationSharp
 		/// </summary>
 		/// <param name="url">The URL of the service to be requested.</param>
 		/// <param name="oAuthToken">The Authorization Bearer for the service if it requires authentication (optional).</param>
-		/// <param name="headers">Headers to be sent with the request to the service (optional).</param>
-		/// <param name="cookies">Cookies to be sent in the header with the request to the service (optional).</param>
 		/// <returns>HttpResponseMessage object to be read.</returns>
-		public static T SendDeleteRequest<T>(string url, string oAuthToken = "", object headers = null, object cookies = null) where T : class
+		public static T SendDeleteRequest<T>(string url, string oAuthToken = "") where T : class
 		{
 			try
 			{
@@ -115,9 +96,6 @@ namespace PlayStationSharp
 				throw;
 			}
 
-			//IFlurlClient fc = SetupRequest(HttpMethod.Delete, url, oAuthToken, null, headers, cookies);
-
-			//return fc.DeleteAsync();
 		}
 
 		/// <summary>
@@ -141,11 +119,6 @@ namespace PlayStationSharp
 				ae.Handle(ex => throw ex);
 				throw;
 			}
-
-			//IFlurlClient fc = SetupRequest(HttpMethod.Put, url, oAuthToken, data, headers, cookies);
-
-			////This API shouldn't have a service for PUTting non-JSON data.
-			//return fc.PutJsonAsync(data);
 		}
 	}
 }

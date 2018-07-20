@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Authentication;
 using Flurl.Http;
 using PlayStationSharp.Exceptions.Auth;
 using PlayStationSharp.Extensions;
@@ -58,7 +57,7 @@ namespace PlayStationSharp.Requests
 				switch (error.ErrorCode)
 				{
 					case 20:
-						throw new InvalidCredentialException($"Invalid credentials for {username}");
+						throw new InvalidCredentialsException();
 					case 4097:
 						throw new CaptchaTokenMissingException();
 					default:

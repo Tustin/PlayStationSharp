@@ -4,7 +4,7 @@ using PlayStationSharp.Model.ProfileJsonTypes;
 
 namespace PlayStationSharp.Model
 {
-    public class FriendsModel
+    public class FriendModel
     {
 	    [JsonProperty("profiles")]
 	    public IList<ProfileModel> Profiles { get; set; }

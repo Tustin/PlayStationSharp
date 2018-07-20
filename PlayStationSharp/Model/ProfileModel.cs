@@ -8,7 +8,6 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 {
 	public class AvatarUrlModel
 	{
-
 		[JsonProperty("size")]
 		public string Size { get; set; }
 
@@ -18,7 +17,6 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 
 	public class EarnedTrophiesModel
 	{
-
 		[JsonProperty("platinum")]
 		public int Platinum { get; set; }
 
@@ -34,7 +32,6 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 
 	public class TrophySummaryModel
 	{
-
 		[JsonProperty("level")]
 		public int Level { get; set; }
 
@@ -47,7 +44,6 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 
 	public class PersonalDetailModel
 	{
-
 		[JsonProperty("firstName")]
 		public string FirstName { get; set; }
 
@@ -57,7 +53,6 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 
 	public class PresenceModel
 	{
-
 		[JsonProperty("onlineStatus")]
 		public string OnlineStatus { get; set; }
 
@@ -67,7 +62,6 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 
 	public class ProfileModel
 	{
-
 		[JsonProperty("onlineId")]
 		public string OnlineId { get; set; }
 

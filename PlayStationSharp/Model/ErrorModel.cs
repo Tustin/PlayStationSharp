@@ -5,7 +5,6 @@ namespace PlayStationSharp.Model
 {
 	internal class ErrorModel
 	{
-
 		[JsonProperty("error")]
 		public string Error { get; set; }
 
@@ -21,5 +20,4 @@ namespace PlayStationSharp.Model
 		[JsonProperty("parameters")]
 		public IList<string> Parameters { get; set; }
 	}
-
 }

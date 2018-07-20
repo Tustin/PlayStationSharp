@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Flurl.Http;
+using PlayStationSharp.Exceptions.Auth;
+using PlayStationSharp.Exceptions.User;
 using PlayStationSharp.Extensions;
 using PlayStationSharp.Model;
 
@@ -8,18 +12,26 @@ namespace PlayStationSharp.API
 	/// <summary>
 	/// Contains information for the currently logged in account.
 	/// </summary>
-	public class Account : IPlayStation
+	public class Account : AbstractUser
 	{
 		public Profile Profile { get; protected set; }
-		public List<User> Friends { get; protected set; }
 
-		public PlayStationClient Client { get; private set; }
+		private readonly Lazy<List<User>> _friends;
+		private readonly Lazy<List<Trophy>> _trophies;
+		private readonly Lazy<List<MessageThread>> _messageThreads;
+
+		public List<User> Friends => _friends.Value;
+		public List<Trophy> Trophies => _trophies.Value;
+		public List<MessageThread> MessageThreads => _messageThreads.Value;
 
 		public Account(OAuthTokens tokens)
 		{
 			Client = new PlayStationClient(tokens, this);
 			Profile = GetInfo();
-			Friends = GetFriends(StatusFilter.All);
+
+			_friends = new Lazy<List<User>>(() => GetFriends());
+			_trophies = new Lazy<List<Trophy>>(() => GetTrophies());
+			_messageThreads = new Lazy<List<MessageThread>>(() => GetMessageThreads());
 		}
 
 		[Flags]
@@ -29,10 +41,29 @@ namespace PlayStationSharp.API
 			All
 		}
 
-		private Profile GetInfo()
+		public User FindUser(string psn)
 		{
-			return Request.SendGetRequest<Profile>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
-				this.Client.Tokens.Authorization);
+			try
+			{
+				var profile = Request.SendGetRequest<Profile>(
+					$"{APIEndpoints.USERS_URL}{psn}/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
+					this.Client.Tokens.Authorization);
+
+				return new User(Client, profile.Information);
+			}
+			catch (FlurlHttpException ex)
+			{
+				var error = ex.GetResponseJsonAsync<ErrorModel>().Result;
+
+				switch (error.ErrorCode)
+				{
+					case 2105356:
+						throw new UserNotFoundException();
+					default:
+						throw new GenericAuthException(error.ErrorDescription);
+				}
+			}
+
 		}
 
 		/// <summary>
@@ -43,38 +74,33 @@ namespace PlayStationSharp.API
 		/// <returns>A list of User objects for each friend.</returns>
 		private List<User> GetFriends(StatusFilter filter = StatusFilter.Online, int limit = 36)
 		{
-			var friends = new List<User>();
+			var filterQuery = (filter == StatusFilter.Online) ? "&userFilter=online" : "";
 
-			var filterQuery = "";
-
-			if (filter == StatusFilter.Online)
-			{
-				filterQuery = "&userFilter=online";
-			}
-
-			var response = Request.SendGetRequest<FriendsModel>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId{filterQuery}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
+			var response = Request.SendGetRequest<FriendModel>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId{filterQuery}&avatarSizes=m&profilePictureSizes=m&offset=0&limit={limit}",
 				this.Client.Tokens.Authorization);
 
-			foreach (var friend in response.Profiles)
-			{
-				friends.Add(new User(Client, friend));
-			}
-
-			return friends;
+			return response.Profiles.Select(friend => new User(Client, friend)).ToList();
 		}
 
-		// TODO: Move into Trophy class
 		/// <summary>
-		/// Deletes the game from showing up under the user's trophies list (only works if the game has 0% of trophies obtained).
+		/// Fetches trophies for the logged in account.
 		/// </summary>
-		/// <param name="gameContentId">The content Id of the game. (ex: NPWR07466_00)</param>
-		/// <returns>True if the trophy was successfully deleted.</returns>
-		//public bool DeleteTrophy(string gameContentId)
-		//{
-		//	Request.SendDeleteRequest<object>($"https://us-tpy.np.community.playstation.net/trophy/v1/users/{ this.Profile.onlineId }/trophyTitles/{ gameContentId }",
-		//		this.AccountTokens.Authorization);
+		/// <param name="limit">The amount of trophies to return (optional).</param>
+		/// <returns></returns>
+		public List<Trophy> GetTrophies(int limit = 36)
+		{
+			var trophyModels = Request.SendGetRequest<TrophyModel>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset=0&limit={limit}",
+				this.Client.Tokens.Authorization);
 
-		//	return true;
-		//}
+			return trophyModels.TrophyTitles.Select(trophy => new Trophy(Client, trophy)).ToList();
+		}
+
+		public List<MessageThread> GetMessageThreads(int offset = 0, int limit = 20)
+		{
+			var threadModels = Request.SendGetRequest<ThreadModel>($"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads?fields=threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestMessageEventDetail,latestTakedownEventDetail,newArrivalEventDetail&limit={limit}&offset={offset}&sinceReceivedDate=1970-01-01T00:00:00Z",
+				this.Client.Tokens.Authorization);
+
+			return threadModels.Threads.Select(thread => new MessageThread(Client, thread)).ToList();
+		}
 	}
 }

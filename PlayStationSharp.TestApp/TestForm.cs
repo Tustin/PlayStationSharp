@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,13 +21,16 @@ namespace PlayStationSharp.TestApp
 
 		private void btnLogin_Click(object sender, EventArgs e)
 		{
-			var login = Auth.CreateLogin();
+			var account = Auth.CreateLogin();
 
-			if (login == null) return;
+			if (account == null) return;
 
 			btnLogin.Enabled = false;
 			lblOnlineId.Visible = true;
-			lblOnlineId.Text = login.Profile.Information.OnlineId;
+			lblOnlineId.Text = account.Profile.Information.OnlineId;
+
+			var user = account.FindUser("tustin25");
+			var trophies = user.Trophies;
 
 		}
 

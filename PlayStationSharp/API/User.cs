@@ -1,37 +1,30 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Flurl.Util;
 using PlayStationSharp.Extensions;
 using PlayStationSharp.Model;
 using PlayStationSharp.Model.ProfileJsonTypes;
 
 namespace PlayStationSharp.API
 {
-	public class User : IPlayStation
+	public class User : AbstractUser
 	{
-		public PlayStationClient Client { get; private set; }
-
 		public ProfileModel Profile { get; private set; }
+		
+		public TrophyModel Trophies { get; private set; }
 
 		public User(PlayStationClient client, string psn)
 		{
 			Client = client;
-			Profile = GetInfo(psn).Information;
+			Profile = this.GetInfo(psn).Information;
+			Trophies = this.CompareTrophies();
 		}
 
 		public User(PlayStationClient client, ProfileModel profile)
 		{
 			Client = client;
 			Profile = profile;
-		}
-
-		/// <summary>
-		/// Fetches profile of a user.
-		/// </summary>
-		/// <param name="psn">The PSN online Id of the user.</param>
-		/// <returns>A profile object containing the user's info</returns>
-		private Profile GetInfo(string psn)
-		{
-			return Request.SendGetRequest<Profile>($"{APIEndpoints.USERS_URL}{psn}/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s", this.Client.Tokens.Authorization);
+			Trophies = this.CompareTrophies();
 		}
 
 		/// <summary>
@@ -90,16 +83,7 @@ namespace PlayStationSharp.API
 				throw new Exception(response.error.message);
 		}
 
-		/// <summary>
-		/// Fetches the user's trophies.
-		/// </summary>
-		/// <param name="limit">The amount of trophies to return (optional).</param>
-		/// <returns></returns>
-		public TrophyResponses.UserTrophiesResponse GetTrophies(int limit = 36)
-		{
-			return Request.SendGetRequest<TrophyResponses.UserTrophiesResponse>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset=0&limit={limit}",
-				this.Client.Tokens.Authorization);
-		}
+
 
 		/// <summary>
 		/// Sends a message to the current User instance.
@@ -136,11 +120,11 @@ namespace PlayStationSharp.API
 		/// <param name="offset"></param>
 		/// <param name="limit"></param>
 		/// <returns></returns>
-		//public TrophyResponses.CompareTrophiesResponse CompareTrophies(int offset = 0, int limit = 36)
-		//{
-		//	return Request.SendGetRequest<TrophyResponses.CompareTrophiesResponse>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset={offset}&limit={limit}&comparedUser={this.Profile.onlineId}",
-		//		Auth.CurrentInstance.AccountTokens.Authorization);
-		//}
+		public TrophyModel CompareTrophies(int offset = 0, int limit = 36)
+		{
+			return Request.SendGetRequest<TrophyModel>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset={offset}&limit={limit}&comparedUser={this.Profile.OnlineId}",
+				this.Client.Tokens.Authorization);
+		}
 
 		/// <summary>
 		/// Gets the activity of the current User.
