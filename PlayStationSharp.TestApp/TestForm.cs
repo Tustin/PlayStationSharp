@@ -31,7 +31,6 @@ namespace PlayStationSharp.TestApp
 
 			var user = account.FindUser("tustin25");
 			var trophies = user.Trophies;
-
 		}
 
 		private void TestForm_Load(object sender, EventArgs e)

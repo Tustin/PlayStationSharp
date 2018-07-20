@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A546C307-F0F9-4F06-9D48-AAAF50825097}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>PlayStarionSharp.TestApp</RootNamespace>
-    <AssemblyName>PlayStarionSharp.TestApp</AssemblyName>
+    <RootNamespace>PlayStationSharp.TestApp</RootNamespace>
+    <AssemblyName>PlayStationSharp.TestApp</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
