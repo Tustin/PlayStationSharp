@@ -1,20 +1,15 @@
 ﻿using System;
+using PlayStationSharp.Model;
 
 namespace PlayStationSharp.Exceptions.Auth
 {
 	[Serializable]
 	public class GenericAuthException : Exception
 	{
-		public GenericAuthException()
+		public AuthErrorModel Error;
+		public GenericAuthException(AuthErrorModel error)
 		{
-		}
-
-		public GenericAuthException(string message) : base(message)
-		{
-		}
-
-		public GenericAuthException(string message, Exception inner) : base(message, inner)
-		{
+			Error = error;
 		}
 	}
 }

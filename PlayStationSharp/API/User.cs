@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Flurl.Util;
+using PlayStationSharp.Exceptions;
+using PlayStationSharp.Exceptions.User;
 using PlayStationSharp.Extensions;
 using PlayStationSharp.Model;
 using PlayStationSharp.Model.ProfileJsonTypes;
@@ -21,6 +21,13 @@ namespace PlayStationSharp.API
 
 		public string OnlineId => this.Profile.OnlineId;
 
+		[Flags]
+		public enum RequestType
+		{
+			Normal,
+			Close,
+		}
+
 		private User(PlayStationClient client)
 		{
 			Client = client;
@@ -38,23 +45,42 @@ namespace PlayStationSharp.API
 		{
 			Profile = profile;
 		}
-
 		/// <summary>
 		/// Adds the current user as a friend.
 		/// </summary>
+		/// <param name="requestType">Type of friend request to send.</param>
 		/// <param name="requestMessage">The message to send with the request.</param>
-		public void AddFriend(string requestMessage = "")
+
+		public bool AddFriend(RequestType requestType = RequestType.Normal, string requestMessage = "")
 		{
-			object message = (string.IsNullOrEmpty(requestMessage)) ? new object() : new
+			try
 			{
-				requestMessage
-			};
+				var endpoint =
+					$"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/friendList/{this.Profile.OnlineId}{(requestType == RequestType.Close ? "/personalDetailSharingWithBody" : "")}";
 
-			var response = Request.SendJsonPostRequestAsync<dynamic>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/friendList/{this.Profile.OnlineId}",
-				message, this.Client.Tokens.Authorization);
+				var message = (string.IsNullOrEmpty(requestMessage))
+					? new object()
+					: new
+					{
+						requestMessage
+					};
 
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
+				Request.SendJsonPostRequestAsync<object>(endpoint, message, this.Client.Tokens.Authorization);
+
+				return true;
+			}
+			catch (PlayStationApiException ex)
+			{
+				switch (ex.Error.Code)
+				{
+					case 2107654:
+						throw new AlreadyFriendsException();
+					case 2107657:
+						throw new AlreadySharingRequestException();
+					default:
+						throw;
+				}
+			}
 		}
 
 		/// <summary>
@@ -62,11 +88,23 @@ namespace PlayStationSharp.API
 		/// </summary>
 		public void RemoveFriend()
 		{
-			var response = Request.SendDeleteRequest<dynamic>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/friendList/{this.Profile.OnlineId}",
-				this.Client.Tokens.Authorization);
+			try
+			{
+				Request.SendDeleteRequest<object>(
+					$"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/friendList/{this.Profile.OnlineId}",
+					this.Client.Tokens.Authorization);
+			}
+			catch (PlayStationApiException ex)
+			{
+				switch (ex.Error.Code)
+				{
+					case 2107649:
+						throw new NotInFriendsListException();
+					default:
+						throw;
+				}
+			}
 
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
 		}
 
 		/// <summary>
@@ -74,12 +112,8 @@ namespace PlayStationSharp.API
 		/// </summary>
 		public void Block()
 		{
-			var response = Request.SendJsonPostRequestAsync<dynamic>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/blockList/{this.Profile.OnlineId}",
+			var response = Request.SendJsonPostRequestAsync<object>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/blockList/{this.Profile.OnlineId}",
 				null, this.Client.Tokens.Authorization);
-
-			//Since we pass null for the JSON POST data, the response likes to be null too...
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
 		}
 
 		/// <summary>
@@ -88,11 +122,27 @@ namespace PlayStationSharp.API
 		/// <returns>True if the user was unblocked successfully.</returns>
 		public void Unblock()
 		{
-			var response = Request.SendDeleteRequest<dynamic>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/blockList/{this.Profile.OnlineId}",
+			var response = Request.SendDeleteRequest<object>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/blockList/{this.Profile.OnlineId}",
 				this.Client.Tokens.Authorization);
+		}
 
-			if (Utilities.ContainsKey(response, "error"))
-				throw new Exception(response.error.message);
+		/// <summary>
+		/// Follow the current user.
+		/// </summary>
+		public void Follow()
+		{
+			// No point in returning anything here because the endpoint doesn't throw an error if you try to follow someone while
+			// already following them.
+			Request.SendPutRequest<object>(
+				$"https://us-fllw.np.community.playstation.net/follow/v1/users/me/followings/users/{this.OnlineId}",
+				oAuthToken: this.Client.Tokens.Authorization);
+		}
+
+		public void Unfollow()
+		{
+			// Same thing as Follow() method.
+			Request.SendDeleteRequest<object>(
+				$"https://us-fllw.np.community.playstation.net/follow/v1/users/me/followings/users/{this.OnlineId}", this.Client.Tokens.Authorization);
 		}
 
 		// TODO: Move anonymous object into proper class

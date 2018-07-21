@@ -64,7 +64,7 @@ namespace PlayStationSharp.API
 					case 2105356:
 						throw new UserNotFoundException(ex.Error.Message);
 					default:
-						throw new GenericAuthException(ex.Error.Message);
+						throw;
 				}
 			}
 

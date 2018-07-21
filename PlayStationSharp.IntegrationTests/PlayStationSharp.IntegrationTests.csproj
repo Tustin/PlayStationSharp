@@ -7,8 +7,8 @@
     <ProjectGuid>{96394082-A189-4974-B955-E3CDD5E0B892}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PlayStationSharp.UnitTests</RootNamespace>
-    <AssemblyName>PlayStationSharp.UnitTests</AssemblyName>
+    <RootNamespace>PlayStationSharp.IntegrationTests</RootNamespace>
+    <AssemblyName>PlayStationSharp.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

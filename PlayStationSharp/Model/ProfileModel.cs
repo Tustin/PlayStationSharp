@@ -125,7 +125,6 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 		[JsonProperty("followerCount")]
 		public int FollowerCount { get; set; }
 	}
-
 }
 
 namespace PlayStationSharp.Model
@@ -134,7 +133,5 @@ namespace PlayStationSharp.Model
 	{
 		[JsonProperty("profile")]
 		public ProfileModel Information { get; set; }
-
 	}
-
 }

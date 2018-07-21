@@ -4,6 +4,7 @@ using System.Text;
 using Flurl.Http;
 using Newtonsoft.Json;
 using PlayStationSharp.Exceptions;
+using PlayStationSharp.Exceptions.Auth;
 using PlayStationSharp.Model;
 
 namespace PlayStationSharp
@@ -59,10 +60,11 @@ namespace PlayStationSharp
 			{
 				ae.Handle(ex =>
 				{
+					// Because Sony doesn't like to be consistent, authentication endpoints seem to return a different error JSON format.
+					// Since this method is the only one still used for authentication, we'll only handle the auth errors.
 					if (!(ex is FlurlHttpException fe)) throw ex;
-					var error = fe.GetResponseJsonAsync<ErrorModel>().Result;
-					throw new PlayStationApiException(error.Error);
-
+					var error = fe.GetResponseJsonAsync<AuthErrorModel>().Result;
+					throw new GenericAuthException(error);
 				});
 				throw;
 			}
@@ -133,7 +135,7 @@ namespace PlayStationSharp
 		/// <param name="data">The POST data for the service.</param>
 		/// <param name="oAuthToken">The Authorization Bearer for the service if it requires authentication (optional).</param>
 		/// <returns>HttpResponseMessage object to be read.</returns>
-		public static T SendPutRequest<T>(string url, HttpContent data, string oAuthToken = "") where T : class
+		public static T SendPutRequest<T>(string url, HttpContent data = null, string oAuthToken = "") where T : class
 		{
 			try
 			{

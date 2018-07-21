@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\AbstractUser.cs" />
+    <Compile Include="Exceptions\Auth\InvalidRefreshTokenException.cs" />
+    <Compile Include="Exceptions\User\AlreadyFriendsException.cs" />
+    <Compile Include="Exceptions\User\AlreadySharingRequestException.cs" />
     <Compile Include="API\IPlayStation.cs" />
     <Compile Include="API\Message.cs" />
     <Compile Include="Exceptions\Auth\CaptchaTokenMissingException.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="Exceptions\Message\ThreadNotFoundException.cs" />
     <Compile Include="Exceptions\PlayStationApiException.cs" />
     <Compile Include="Exceptions\Auth\XnpGrantCodeNotFoundException.cs" />
+    <Compile Include="Exceptions\User\NotInFriendsListException.cs" />
     <Compile Include="Exceptions\User\UserNotFoundException.cs" />
     <Compile Include="Extensions\MessageThreadExtensions.cs" />
     <Compile Include="Forms\LoginForm.cs">
@@ -73,7 +77,9 @@
     <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\AuthErrorModel.cs" />
     <Compile Include="Model\CreatedThreadModel.cs" />
+    <Compile Include="Model\OAuthTokenModel.cs" />
     <Compile Include="Model\ThreadModel.cs" />
     <Compile Include="Model\ThreadsModel.cs" />
     <Compile Include="PlayStationClient.cs" />
@@ -89,13 +95,7 @@
     <Compile Include="API\MessageThread.cs" />
     <Compile Include="Extensions\OAuthTokens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Requests\AvatarRequest.cs" />
-    <Compile Include="Requests\DualAuthLoginRequest.cs" />
     <Compile Include="Exceptions\Auth\InvalidTwoStepCredentialsException.cs" />
-    <Compile Include="Requests\LoginRequest.cs" />
-    <Compile Include="Requests\MessageRequest.cs" />
-    <Compile Include="Requests\NPGrantCodeRequest.cs" />
-    <Compile Include="Requests\OAuthRequest.cs" />
     <Compile Include="API\Trophy.cs" />
     <Compile Include="API\User.cs" />
     <Compile Include="Extensions\Utilities.cs" />
