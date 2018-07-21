@@ -21,31 +21,28 @@ namespace PlayStationSharp.API
 
 		public string OnlineId => this.Profile.OnlineId;
 
-		public User()
+		private User(PlayStationClient client)
 		{
+			Client = client;
 			_trophies = new Lazy<List<Trophy>>(() => this.GetTrophies());
-			_messageThreads = new Lazy<List<MessageThread>>(() => this.GetMessageThreads());
+			_messageThreads = new Lazy<List<MessageThread>>(this.GetMessageThreads);
 		}
 
 
-		public User(PlayStationClient client, string psn)
+		public User(PlayStationClient client, string psn) : this(client)
 		{
-			Client = client;
 			Profile = this.GetInfo(psn).Information;
-
 		}
 
-		public User(PlayStationClient client, ProfileModel profile)
+		public User(PlayStationClient client, ProfileModel profile) : this(client)
 		{
-			Client = client;
 			Profile = profile;
-			_trophies = new Lazy<List<Trophy>>(() => this.GetTrophies());
 		}
 
 		/// <summary>
 		/// Adds the current user as a friend.
 		/// </summary>
-		/// <param name="requestMessage">The message to send with the request (optional).</param>
+		/// <param name="requestMessage">The message to send with the request.</param>
 		public void AddFriend(string requestMessage = "")
 		{
 			object message = (string.IsNullOrEmpty(requestMessage)) ? new object() : new
@@ -61,7 +58,7 @@ namespace PlayStationSharp.API
 		}
 
 		/// <summary>
-		/// Removes the current user from your friends list. (Same as Account.RemoveFriend, but removes the current User object from your friends list.)
+		/// Removes the current user from your friends list,
 		/// </summary>
 		public void RemoveFriend()
 		{
@@ -73,7 +70,7 @@ namespace PlayStationSharp.API
 		}
 
 		/// <summary>
-		/// Blocks the current user. (Same as Account.BlockUser, but blocks the current user object.)
+		/// Blocks the current user.
 		/// </summary>
 		public void Block()
 		{
@@ -86,7 +83,7 @@ namespace PlayStationSharp.API
 		}
 
 		/// <summary>
-		/// Unblocks the current user. (Same as Account.UnblockUser, but unblocks the current user object.)
+		/// Unblocks the current user.
 		/// </summary>
 		/// <returns>True if the user was unblocked successfully.</returns>
 		public void Unblock()
@@ -99,6 +96,11 @@ namespace PlayStationSharp.API
 		}
 
 		// TODO: Move anonymous object into proper class
+		/// <summary>
+		/// Sends a message.
+		/// </summary>
+		/// <param name="content">Body of the message.</param>
+		/// <returns>New instance of the message thread.</returns>
 		public MessageThread SendMessage(string content)
 		{
 			MessageThread messageThread = null;
@@ -134,6 +136,10 @@ namespace PlayStationSharp.API
 			return messageThread.SendMessage(content);
 		}
 
+		/// <summary>
+		/// Gets all message threads with both you and the user.
+		/// </summary>
+		/// <returns>List of each message thread.</returns>
 		public List<MessageThread> GetMessageThreads()
 		{
 			return this.Client.Account.FindMessageThreads(this.OnlineId);

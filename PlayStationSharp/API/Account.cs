@@ -41,12 +41,17 @@ namespace PlayStationSharp.API
 			All
 		}
 
-		public User FindUser(string psn)
+		/// <summary>
+		/// Finds a user.
+		/// </summary>
+		/// <param name="onlineId">Online name of the user.</param>
+		/// <returns>New instance of User for the selected player.</returns>
+		public User FindUser(string onlineId)
 		{
 			try
 			{
 				var profile = Request.SendGetRequest<Profile>(
-					$"{APIEndpoints.USERS_URL}{psn}/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
+					$"{APIEndpoints.USERS_URL}{onlineId}/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s",
 					this.Client.Tokens.Authorization);
 
 				return new User(Client, profile.Information);
@@ -66,6 +71,11 @@ namespace PlayStationSharp.API
 
 		}
 
+		/// <summary>
+		/// Finds all message threads (aka groups) you are in with the given onlineId.
+		/// </summary>
+		/// <param name="onlineId"></param>
+		/// <returns></returns>
 		public List<MessageThread> FindMessageThreads(string onlineId)
 		{
 			return this.Client.Account.MessageThreads.Where(a => a.Members.Any(b => b.OnlineId.Equals(onlineId)))
@@ -73,10 +83,10 @@ namespace PlayStationSharp.API
 		}
 
 		/// <summary>
-		/// Fetches each friend of the logged in account.
+		/// Gets friends for the current account.
 		/// </summary>
-		/// <param name="filter">A filter to grab online or all friends. Defaults to online.</param>
-		/// <param name="limit">The amount of friends to return. By default, the PSN app uses 36.</param>
+		/// <param name="filter">Filter friends by status.</param>
+		/// <param name="limit">The amount of friends to return.</param>
 		/// <returns>A list of User objects for each friend.</returns>
 		private List<User> GetFriends(StatusFilter filter = StatusFilter.Online, int limit = 36)
 		{
@@ -89,9 +99,9 @@ namespace PlayStationSharp.API
 		}
 
 		/// <summary>
-		/// Fetches trophies for the logged in account.
+		/// Gets trophies for the current account.
 		/// </summary>
-		/// <param name="limit">The amount of trophies to return (optional).</param>
+		/// <param name="limit">The amount of trophies to return.</param>
 		/// <returns></returns>
 		public List<Trophy> GetTrophies(int limit = 36)
 		{
@@ -101,6 +111,12 @@ namespace PlayStationSharp.API
 			return trophyModels.TrophyTitles.Select(trophy => new Trophy(Client, trophy)).ToList();
 		}
 
+		/// <summary>
+		/// Gets message threads (aka groups) for the logged in account.
+		/// </summary>
+		/// <param name="offset"></param>
+		/// <param name="limit"></param>
+		/// <returns></returns>
 		public List<MessageThread> GetMessageThreads(int offset = 0, int limit = 20)
 		{
 			var threadModels = Request.SendGetRequest<ThreadsModel>($"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads?fields=threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestMessageEventDetail,latestTakedownEventDetail,newArrivalEventDetail&limit={limit}&offset={offset}&sinceReceivedDate=1970-01-01T00:00:00Z",
