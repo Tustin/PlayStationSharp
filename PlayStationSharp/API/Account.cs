@@ -66,6 +66,12 @@ namespace PlayStationSharp.API
 
 		}
 
+		public List<MessageThread> FindMessageThreads(string onlineId)
+		{
+			return this.Client.Account.MessageThreads.Where(a => a.Members.Any(b => b.OnlineId.Equals(onlineId)))
+				.ToList();
+		}
+
 		/// <summary>
 		/// Fetches each friend of the logged in account.
 		/// </summary>
@@ -97,7 +103,7 @@ namespace PlayStationSharp.API
 
 		public List<MessageThread> GetMessageThreads(int offset = 0, int limit = 20)
 		{
-			var threadModels = Request.SendGetRequest<ThreadModel>($"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads?fields=threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestMessageEventDetail,latestTakedownEventDetail,newArrivalEventDetail&limit={limit}&offset={offset}&sinceReceivedDate=1970-01-01T00:00:00Z",
+			var threadModels = Request.SendGetRequest<ThreadsModel>($"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads?fields=threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestMessageEventDetail,latestTakedownEventDetail,newArrivalEventDetail&limit={limit}&offset={offset}&sinceReceivedDate=1970-01-01T00:00:00Z",
 				this.Client.Tokens.Authorization);
 
 			return threadModels.Threads.Select(thread => new MessageThread(Client, thread)).ToList();

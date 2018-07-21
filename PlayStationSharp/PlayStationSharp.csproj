@@ -65,13 +65,16 @@
     <Compile Include="Exceptions\PlayStationApiException.cs" />
     <Compile Include="Exceptions\Auth\XnpGrantCodeNotFoundException.cs" />
     <Compile Include="Exceptions\User\UserNotFoundException.cs" />
+    <Compile Include="Extensions\MessageThreadExtensions.cs" />
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\CreatedThreadModel.cs" />
     <Compile Include="Model\ThreadModel.cs" />
+    <Compile Include="Model\ThreadsModel.cs" />
     <Compile Include="PlayStationClient.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Model\ActivityModel.cs" />

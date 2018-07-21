@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PlayStationSharp.API;
+using PlayStationSharp.Extensions;
 
 namespace PlayStationSharp.TestApp
 {
@@ -29,8 +30,16 @@ namespace PlayStationSharp.TestApp
 			lblOnlineId.Visible = true;
 			lblOnlineId.Text = account.Profile.Information.OnlineId;
 
-			var user = account.FindUser("tustin25");
-			var trophies = user.Trophies;
+			account.FindUser("tustin25").SendMessage("testing here");
+			//	.GetMessageThreads()
+			//	.PrivateMessageThread();
+
+			//if (thread == null) return; // No private message group found
+
+			//thread.SendMessage("hey there!");
+
+			MessageBox.Show("sent message");
+
 		}
 
 		private void TestForm_Load(object sender, EventArgs e)

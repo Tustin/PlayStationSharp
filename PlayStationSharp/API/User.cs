@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Flurl.Util;
 using PlayStationSharp.Extensions;
@@ -10,21 +12,34 @@ namespace PlayStationSharp.API
 	public class User : AbstractUser
 	{
 		public ProfileModel Profile { get; private set; }
-		
-		public TrophyModel Trophies { get; private set; }
+
+		private readonly Lazy<List<Trophy>> _trophies;
+		private readonly Lazy<List<MessageThread>> _messageThreads;
+
+		public List<Trophy> Trophies => _trophies.Value;
+		public List<MessageThread> MessageThreads => _messageThreads.Value;
+
+		public string OnlineId => this.Profile.OnlineId;
+
+		public User()
+		{
+			_trophies = new Lazy<List<Trophy>>(() => this.GetTrophies());
+			_messageThreads = new Lazy<List<MessageThread>>(() => this.GetMessageThreads());
+		}
+
 
 		public User(PlayStationClient client, string psn)
 		{
 			Client = client;
 			Profile = this.GetInfo(psn).Information;
-			Trophies = this.CompareTrophies();
+
 		}
 
 		public User(PlayStationClient client, ProfileModel profile)
 		{
 			Client = client;
 			Profile = profile;
-			Trophies = this.CompareTrophies();
+			_trophies = new Lazy<List<Trophy>>(() => this.GetTrophies());
 		}
 
 		/// <summary>
@@ -83,47 +98,60 @@ namespace PlayStationSharp.API
 				throw new Exception(response.error.message);
 		}
 
+		// TODO: Move anonymous object into proper class
+		public MessageThread SendMessage(string content)
+		{
+			MessageThread messageThread = null;
 
+			var exists = this.Client.Account.FindMessageThreads(this.OnlineId).PrivateMessageThread();
+			if (exists != null)
+			{
+				messageThread = new MessageThread(Client, exists.Information);
+			}
+			else
+			{
+				var newThreadModel = Request.SendMultiPartPostRequest<CreatedThreadModel>(
+					"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/messageGroups", "gc0p4Jq0M2Yt08jU534c0p", "threadDetail", new
+					{
+						threadDetail = new
+						{
+							threadMembers = new[]
+							{
+								new {
+									onlineId = this.Profile.OnlineId
+								},
+								new
+								{
+									onlineId = this.Client.Account.Profile.Information.OnlineId
+								}
+							}
+						}
+					}, this.Client.Tokens.Authorization);
 
-		/// <summary>
-		/// Sends a message to the current User instance.
-		/// </summary>
-		/// <param name="messageContent">Message object containing the details for the message.</param>
-		/// <returns>True if the message gets sent successfully.</returns>
-		//     public bool SendMessage(Message messageContent)
-		//     {
-		//if (messageContent == null) return false;
+				messageThread = new MessageThread(Client, newThreadModel.ThreadId);
+			}
 
-		//         //Set the receiver of the message to the current user.
-		//         messageContent.Receiver = this;
+			return messageThread.SendMessage(content);
+		}
 
-		//         if (messageContent.MessageType == MessageType.MessageText)
-		//         {
-		//             MessageRequest mr = new MessageRequest(messageContent.UsersToInvite, new MessageData(messageContent.MessageText, 1));
-		//             var message = mr.BuildTextMessage();
-		//             IFlurlClient fc = new FlurlClient("https://us-gmsg.np.community.playstation.net/groupMessaging/v1/messageGroups")
-		//                 .WithHeader("Authorization", new AuthenticationHeaderValue("Bearer", Auth.CurrentInstance.AccountTokens.Authorization));
-		//             var response = Request.SendRequest(HttpMethod.Post, fc, message).ReceiveJson().Result;
+		public List<MessageThread> GetMessageThreads()
+		{
+			return this.Client.Account.FindMessageThreads(this.OnlineId);
+		}
 
-		//             if (Utilities.ContainsKey(response, "error"))
-		//                 throw new Exception(response.error.message);
-
-		//             return true;
-		//         }
-		//         //TODO: Add other messageTypes (audio and images)
-		//         throw new NotImplementedException();
-		//     }
-
+		// TODO: Remove redudancy of GetTrophies
 		/// <summary>
 		/// Compares the current User's trophies with the current logged in account.
 		/// </summary>
 		/// <param name="offset"></param>
 		/// <param name="limit"></param>
 		/// <returns></returns>
-		public TrophyModel CompareTrophies(int offset = 0, int limit = 36)
+		public List<Trophy> GetTrophies(int offset = 0, int limit = 36)
 		{
-			return Request.SendGetRequest<TrophyModel>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset={offset}&limit={limit}&comparedUser={this.Profile.OnlineId}",
+			var trophyModels = Request.SendGetRequest<TrophyModel>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset={offset}&limit={limit}&comparedUser={this.Profile.OnlineId}",
 				this.Client.Tokens.Authorization);
+
+			return trophyModels.TrophyTitles.Select(trophy => new Trophy(Client, trophy)).ToList();
 		}
 
 		/// <summary>

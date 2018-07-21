@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace PlayStationSharp
 {
@@ -120,5 +122,38 @@ namespace PlayStationSharp
 				throw;
 			}
 		}
+
+		public static T SendMultiPartPostRequest<T>(string url, string boundry, string dispositionName, object data, string oAuthToken = "") where T : class
+		{
+			try
+			{
+				var sb = new StringBuilder();
+
+				sb.Append($"--{boundry}");
+				sb.AppendLine();
+				sb.Append("Content-Type: application/json; charset=utf-8");
+				sb.AppendLine();
+				sb.Append($"Content-Disposition: form-data; name=\"{dispositionName}\"");
+				sb.AppendLine();
+				sb.AppendLine();
+				sb.Append(JsonConvert.SerializeObject(data, Formatting.Indented));
+				sb.AppendLine();
+				sb.Append($"--{boundry}--");
+
+				return url
+					.WithOAuthBearerToken(oAuthToken)
+					.WithHeader("Content-Type", $"multipart/form-data; boundary=\"{boundry}\"")
+					.PostStringAsync(sb.ToString())
+					.ReceiveJson<T>().Result;
+
+			}
+			catch (AggregateException ae)
+			{
+				ae.Handle(ex => throw ex);
+				throw;
+			}
+		}
 	}
+
+
 }
