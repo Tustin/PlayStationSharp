@@ -1,20 +1,13 @@
 ﻿using System;
+using PlayStationSharp.Model.ErrorModelJsonTypes;
 
 namespace PlayStationSharp.Exceptions
 {
 	[Serializable]
 	public class PlayStationApiException : Exception
 	{
-		public PlayStationApiException()
-		{
-		}
+		public Error Error;
 
-		public PlayStationApiException(string message) : base(message)
-		{
-		}
-
-		public PlayStationApiException(string message, Exception innerException) : base(message, innerException)
-		{
-		}
+		public PlayStationApiException(Error error) => Error = error;
 	}
 }

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Flurl.Http;
+using PlayStationSharp.Exceptions;
+using PlayStationSharp.Exceptions.Message;
 using PlayStationSharp.Model;
 
 namespace PlayStationSharp.API
@@ -50,8 +53,22 @@ namespace PlayStationSharp.API
 		/// <returns>New instance of ThreadModel.</returns>
 		private ThreadModel GetThread(string threadId, int count = 200)
 		{
-			return Request.SendGetRequest<ThreadModel>($"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/{threadId}?count={count}&fields=threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestTakedownEventDetail,newArrivalEventDetail,threadEvents",
-				this.Client.Tokens.Authorization);
+			try
+			{
+				return Request.SendGetRequest<ThreadModel>(
+					$"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/{threadId}?count={count}&fields=threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestTakedownEventDetail,newArrivalEventDetail,threadEvents",
+					this.Client.Tokens.Authorization);
+			}
+			catch (PlayStationApiException ex)
+			{
+				switch (ex.Error.Code)
+				{
+					case 2121741:
+						throw new ThreadNotFoundException();
+					default:
+						throw;
+				}
+			}
 		}
 
 		/// <summary>
@@ -60,20 +77,13 @@ namespace PlayStationSharp.API
 		/// <returns>List of each user.</returns>
 		private List<User> GetMembers()
 		{
-			var members = new List<User>();
-
-			foreach (var member in this.Information.ThreadMembers)
-			{
-				members.Add(new User(Client, member.OnlineId));
-			}
-
-			return members;
+			return this.Information.ThreadMembers.Select(member => new User(Client, member.OnlineId)).ToList();
 		}
 
 		/// <summary>
 		/// Leave the current message thread.
 		/// </summary>
-		/// <returns>If left successfully or not.</returns>
+		/// <returns>If left successfully.</returns>
 		private bool Leave()
 		{
 			try
@@ -81,13 +91,19 @@ namespace PlayStationSharp.API
 				Request.SendDeleteRequest<object>(
 					$"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/{this.Information.ThreadId}/users/me",
 					Client.Tokens.Authorization);
+
 				return true;
 			}
-			catch (Exception)
+			catch (PlayStationApiException ex)
 			{
-				return false; // TODO
+				switch (ex.Error.Code)
+				{
+					case 2121741:
+						throw new ThreadNotFoundException();
+					default:
+						throw;
+				}
 			}
-
 		}
 
 		/// <summary>

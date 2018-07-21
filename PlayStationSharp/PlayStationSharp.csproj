@@ -62,6 +62,7 @@
     <Compile Include="Exceptions\Auth\InvalidCredentialsException.cs" />
     <Compile Include="Exceptions\Auth\OAuthTokenNotFoundException.cs" />
     <Compile Include="Exceptions\Auth\NpssoIdNotFoundException.cs" />
+    <Compile Include="Exceptions\Message\ThreadNotFoundException.cs" />
     <Compile Include="Exceptions\PlayStationApiException.cs" />
     <Compile Include="Exceptions\Auth\XnpGrantCodeNotFoundException.cs" />
     <Compile Include="Exceptions\User\UserNotFoundException.cs" />

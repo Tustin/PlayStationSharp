@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Flurl.Http;
+using PlayStationSharp.Exceptions;
 using PlayStationSharp.Exceptions.Auth;
 using PlayStationSharp.Exceptions.User;
 using PlayStationSharp.Extensions;
@@ -56,16 +57,14 @@ namespace PlayStationSharp.API
 
 				return new User(Client, profile.Information);
 			}
-			catch (FlurlHttpException ex)
+			catch (PlayStationApiException ex)
 			{
-				var error = ex.GetResponseJsonAsync<ErrorModel>().Result;
-
-				switch (error.ErrorCode)
+				switch (ex.Error.Code)
 				{
 					case 2105356:
-						throw new UserNotFoundException();
+						throw new UserNotFoundException(ex.Error.Message);
 					default:
-						throw new GenericAuthException(error.ErrorDescription);
+						throw new GenericAuthException(ex.Error.Message);
 				}
 			}
 

@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Text;
 using Flurl.Http;
 using Newtonsoft.Json;
+using PlayStationSharp.Exceptions;
+using PlayStationSharp.Model;
 
 namespace PlayStationSharp
 {
@@ -26,7 +28,13 @@ namespace PlayStationSharp
 			}
 			catch (AggregateException ae)
 			{
-				ae.Handle(ex => throw ex);
+				ae.Handle(ex =>
+				{
+					if (!(ex is FlurlHttpException fe)) throw ex;
+					var error = fe.GetResponseJsonAsync<ErrorModel>().Result;
+					throw new PlayStationApiException(error.Error);
+
+				});
 				throw;
 			}
 		}
@@ -49,7 +57,13 @@ namespace PlayStationSharp
 			}
 			catch (AggregateException ae)
 			{
-				ae.Handle(ex => throw ex);
+				ae.Handle(ex =>
+				{
+					if (!(ex is FlurlHttpException fe)) throw ex;
+					var error = fe.GetResponseJsonAsync<ErrorModel>().Result;
+					throw new PlayStationApiException(error.Error);
+
+				});
 				throw;
 			}
 		}
@@ -72,7 +86,13 @@ namespace PlayStationSharp
 			}
 			catch (AggregateException ae)
 			{
-				ae.Handle(ex => throw ex);
+				ae.Handle(ex =>
+				{
+					if (!(ex is FlurlHttpException fe)) throw ex;
+					var error = fe.GetResponseJsonAsync<ErrorModel>().Result;
+					throw new PlayStationApiException(error.Error);
+
+				});
 				throw;
 			}
 		}
@@ -94,7 +114,13 @@ namespace PlayStationSharp
 			}
 			catch (AggregateException ae)
 			{
-				ae.Handle(ex => throw ex);
+				ae.Handle(ex =>
+				{
+					if (!(ex is FlurlHttpException fe)) throw ex;
+					var error = fe.GetResponseJsonAsync<ErrorModel>().Result;
+					throw new PlayStationApiException(error.Error);
+
+				});
 				throw;
 			}
 
@@ -118,7 +144,13 @@ namespace PlayStationSharp
 			}
 			catch (AggregateException ae)
 			{
-				ae.Handle(ex => throw ex);
+				ae.Handle(ex =>
+				{
+					if (!(ex is FlurlHttpException fe)) throw ex;
+					var error = fe.GetResponseJsonAsync<ErrorModel>().Result;
+					throw new PlayStationApiException(error.Error);
+
+				});
 				throw;
 			}
 		}
@@ -149,7 +181,13 @@ namespace PlayStationSharp
 			}
 			catch (AggregateException ae)
 			{
-				ae.Handle(ex => throw ex);
+				ae.Handle(ex =>
+				{
+					if (!(ex is FlurlHttpException fe)) throw ex;
+					var error = fe.GetResponseJsonAsync<ErrorModel>().Result;
+					throw new PlayStationApiException(error.Error);
+
+				});
 				throw;
 			}
 		}

@@ -30,7 +30,7 @@ namespace PlayStationSharp.TestApp
 			lblOnlineId.Visible = true;
 			lblOnlineId.Text = account.Profile.Information.OnlineId;
 
-			account.FindUser("tustin25").SendMessage("testing here");
+			var user = account.FindUser("tustin25aaaa");
 			//	.GetMessageThreads()
 			//	.PrivateMessageThread();
 

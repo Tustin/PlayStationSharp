@@ -32,18 +32,6 @@ namespace PlayStationSharp.Requests
 				return result.npsso;
 			}
 			catch (NpssoIdNotFoundException e) { throw new NpssoIdNotFoundException(e.Message); }
-			catch (FlurlHttpException ex)
-			{
-				var error = ex.GetResponseJsonAsync<ErrorModel>().Result;
-
-				switch (error.ErrorCode)
-				{
-					case 4420:
-						throw new InvalidTwoStepCredentialsException();
-					default:
-						throw new GenericAuthException(error.ErrorDescription);
-				}
-			}
 		}
 	}
 }

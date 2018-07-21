@@ -50,20 +50,6 @@ namespace PlayStationSharp.Requests
 			{
 				throw new NpssoIdNotFoundException(e.Message);
 			}
-			catch (FlurlHttpException ex)
-			{
-				var error = ex.GetResponseJsonAsync<ErrorModel>().Result;
-
-				switch (error.ErrorCode)
-				{
-					case 20:
-						throw new InvalidCredentialsException();
-					case 4097:
-						throw new CaptchaTokenMissingException();
-					default:
-						throw new GenericAuthException(error.ErrorDescription);
-				}
-			}
 		}
 	}
 }
