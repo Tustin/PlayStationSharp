@@ -20,10 +20,12 @@ namespace PlayStationSharp.API
 		private readonly Lazy<List<User>> _friends;
 		private readonly Lazy<List<Trophy>> _trophies;
 		private readonly Lazy<List<MessageThread>> _messageThreads;
+		private readonly Lazy<List<Story>> _activityFeed;
 
 		public List<User> Friends => _friends.Value;
 		public List<Trophy> Trophies => _trophies.Value;
 		public List<MessageThread> MessageThreads => _messageThreads.Value;
+		public List<Story> ActivityFeed => _activityFeed.Value;
 
 		public Account(OAuthTokens tokens)
 		{
@@ -33,7 +35,10 @@ namespace PlayStationSharp.API
 			_friends = new Lazy<List<User>>(() => GetFriends());
 			_trophies = new Lazy<List<Trophy>>(() => GetTrophies());
 			_messageThreads = new Lazy<List<MessageThread>>(() => GetMessageThreads());
+			_activityFeed = new Lazy<List<Story>>(() => GetActivityFeed());
 		}
+
+
 
 		[Flags]
 		public enum StatusFilter
@@ -122,6 +127,19 @@ namespace PlayStationSharp.API
 				this.Client.Tokens.Authorization);
 
 			return threadModels.Threads.Select(thread => new MessageThread(Client, thread)).ToList();
+		}
+
+		/// <summary>
+		/// Gets activity feed.
+		/// </summary>
+		/// <returns></returns>
+		private List<Story> GetActivityFeed(bool includeComments = true, int offset = 0, int blockSize = 10)
+		{
+			var activityModels = Request.SendGetRequest<ActivityModel>(
+				$"https://activity.api.np.km.playstation.net/activity/api/v2/users/me/feed/0?includeComments={includeComments}&offset={offset}&blockSize={blockSize}",
+				this.Client.Tokens.Authorization);
+
+			return activityModels.Feed.Select(feed => new Story(Client, feed)).ToList();
 		}
 	}
 }

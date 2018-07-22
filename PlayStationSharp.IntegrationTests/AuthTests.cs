@@ -9,7 +9,6 @@ namespace PlayStationSharp.IntegrationTests
 	[TestClass]
 	public class AuthTests
 	{
-
 		[TestMethod]
 		[ExpectedException(typeof(InvalidRefreshTokenException), "An invalid or expired refresh token was passed.")]
 		public void Login_WithInvalidRefreshToken_InvalidRefreshTokenException()

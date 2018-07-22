@@ -56,7 +56,6 @@ namespace PlayStationSharp.Extensions
 						throw;
 				}
 			}
-
 		}
 	}
 }

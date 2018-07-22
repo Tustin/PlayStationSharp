@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using PlayStationSharp.Exceptions;
 using PlayStationSharp.Exceptions.Auth;
 using PlayStationSharp.Extensions;
 using PlayStationSharp.Forms;
@@ -50,12 +51,12 @@ namespace PlayStationSharp.API
 
 					tokens = new OAuthTokens(result);
 				}
-				catch (GenericAuthException ex)
+				catch (PlayStationApiException ex)
 				{
-					switch (ex.Error.ErrorCode)
+					switch (ex.Error.Code)
 					{
 						case 4159:
-							throw new InvalidRefreshTokenException(ex.Error.ErrorDescription);
+							throw new InvalidRefreshTokenException(ex.Error.Message);
 						default:
 							throw;
 					}

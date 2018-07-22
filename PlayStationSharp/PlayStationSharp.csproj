@@ -54,6 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\AbstractUser.cs" />
+    <Compile Include="Exceptions\Activity\InvalidCommentException.cs" />
+    <Compile Include="Exceptions\InvalidErrorException.cs" />
+    <Compile Include="Model\CommentModel.cs" />
+    <Compile Include="API\Story.cs" />
+    <Compile Include="API\Comment.cs" />
     <Compile Include="Exceptions\Auth\InvalidRefreshTokenException.cs" />
     <Compile Include="Exceptions\User\AlreadyFriendsException.cs" />
     <Compile Include="Exceptions\User\AlreadySharingRequestException.cs" />
