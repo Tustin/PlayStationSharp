@@ -36,6 +36,7 @@ namespace PlayStationSharp.TestApp
 			lblOnlineId.Text = account.OnlineId;
 
 			lstFriends.Visible = true;
+			//lstFriends.DataSource = account.Friends.Online().Select(a => a.OnlineId).ToList();
 			lstFriends.DataSource = account.Friends.Select(a => a.OnlineId).ToList();
 
 			lblFriends.Visible = true;
