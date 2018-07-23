@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace PlayStationSharp.API
+namespace PlayStationSharp.Exceptions.Activity
 {
 	[Serializable]
 	internal class NoCommentsFoundException : Exception

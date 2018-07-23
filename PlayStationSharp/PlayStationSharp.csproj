@@ -58,6 +58,7 @@
     <Compile Include="Exceptions\Activity\EmptyActivityFeedException.cs" />
     <Compile Include="Exceptions\Activity\InvalidCommentException.cs" />
     <Compile Include="Exceptions\InvalidErrorException.cs" />
+    <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Model\CommentModel.cs" />
     <Compile Include="API\Story.cs" />
     <Compile Include="API\Comment.cs" />

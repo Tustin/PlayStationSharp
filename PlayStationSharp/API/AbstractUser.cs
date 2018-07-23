@@ -76,13 +76,10 @@ namespace PlayStationSharp.API
 		/// <param name="filter">Filter friends by status.</param>
 		/// <param name="limit">The amount of friends to return.</param>
 		/// <returns>A list of User objects for each friend.</returns>
-		protected List<User> GetFriends(StatusFilter filter = StatusFilter.Online, int limit = 500)
+		protected List<User> GetFriends(StatusFilter filter = StatusFilter.All, int limit = 500)
 		{
 			var response = Request.SendGetRequest<FriendModel>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/{this.UserParameter}/friends/profiles2?fields=onlineId,accountId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),presences(@titleInfo,hasBroadcastData),presences(@titleInfo),friendRelation,consoleAvailability&profilePictureSizes=m&avatarSizes=m&sort=onlineStatus&titleIconSize=s&extendPersonalDetailTarget=true&offset=0&limit={limit}",
 				this.Client.Tokens.Authorization);
-
-			if (filter == StatusFilter.Online)
-				response.Profiles = response.Profiles.Where(a => a.Presences != null && a.Presences[0].OnlineStatus == "online").ToList();
 
 			return response.Profiles.Select(friend => new User(Client, friend)).ToList();
 		}

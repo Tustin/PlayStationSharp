@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PlayStationSharp.Exceptions;
+using PlayStationSharp.Exceptions.Activity;
 using PlayStationSharp.Model;
 using PlayStationSharp.Model.ActivityModelJsonTypes;
 
@@ -17,7 +16,6 @@ namespace PlayStationSharp.API
 		public Feed Information { get; }
 		public string StoryId => this.Information.StoryId;
 		public List<Comment> Comments => _comments.Value;
-
 
 		public Story(PlayStationClient client, Feed feed)
 		{

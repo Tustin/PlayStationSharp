@@ -20,30 +20,26 @@ namespace PlayStationSharp.TestApp
 			InitializeComponent();
 		}
 
+		private Account Account { get; set; }
+
 		private void btnLogin_Click(object sender, EventArgs e)
 		{
 			var account = Auth.CreateLogin();
 
 			if (account == null) return;
 
+			this.Account = account;
+
 			btnLogin.Enabled = false;
+
 			lblOnlineId.Visible = true;
 			lblOnlineId.Text = account.OnlineId;
 
-			var me = account.Profile;
-			var test = account.FindUser("tustin25");
-			var myfriends = account.Friends;
-			var friends = test.Friends;
-			var aa = test.Trophies;
-			//	.GetMessageThreads()
-			//	.PrivateMessageThread();
+			lstFriends.Visible = true;
+			lstFriends.DataSource = account.Friends.Select(a => a.OnlineId).ToList();
 
-			//if (thread == null) return; // No private message group found
-
-			//thread.SendMessage("hey there!");
-
-			MessageBox.Show("sent message");
-
+			lblFriends.Visible = true;
+			lblFriends.Text = $"Friends ({lstFriends.Items.Count})";
 		}
 
 		private void TestForm_Load(object sender, EventArgs e)
