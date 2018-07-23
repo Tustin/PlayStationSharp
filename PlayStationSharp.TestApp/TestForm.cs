@@ -28,9 +28,13 @@ namespace PlayStationSharp.TestApp
 
 			btnLogin.Enabled = false;
 			lblOnlineId.Visible = true;
-			lblOnlineId.Text = account.Profile.Information.OnlineId;
+			lblOnlineId.Text = account.OnlineId;
 
-			var user = account.FindUser("tustin25aaa");
+			var me = account.Profile;
+			var test = account.FindUser("tustin25");
+			var myfriends = account.Friends;
+			var friends = test.Friends;
+			var aa = test.Trophies;
 			//	.GetMessageThreads()
 			//	.PrivateMessageThread();
 

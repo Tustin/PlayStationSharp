@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\AbstractUser.cs" />
+    <Compile Include="Exceptions\Activity\NoCommentsFoundException.cs" />
+    <Compile Include="Exceptions\Activity\EmptyActivityFeedException.cs" />
     <Compile Include="Exceptions\Activity\InvalidCommentException.cs" />
     <Compile Include="Exceptions\InvalidErrorException.cs" />
     <Compile Include="Model\CommentModel.cs" />

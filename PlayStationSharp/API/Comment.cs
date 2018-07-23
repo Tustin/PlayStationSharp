@@ -11,15 +11,19 @@ namespace PlayStationSharp.API
 {
 	public class Comment : IPlayStation
 	{
+		private readonly UserComment Information;
+		private readonly Story _story;
+		private readonly Lazy<User> _submitter;
+
 		public PlayStationClient Client { get; }
-		private UserComment Information;
-		private readonly Story Story;
+		public User Submitter => _submitter.Value;
 
 		public Comment(PlayStationClient client, UserComment comment, Story story)
 		{
 			this.Client = client;
 			this.Information = comment;
-			this.Story = story;
+			this._story = story;
+			this._submitter = new Lazy<User>(() => new User(Client, this.Information.OnlineId));
 		}
 
 		public bool Delete()
@@ -27,7 +31,7 @@ namespace PlayStationSharp.API
 			try
 			{
 				var request = Request.SendDeleteRequest<object>(
-					$"https://activity.api.np.km.playstation.net/activity/api/v1/users/me/stories/{this.Story.Information.StoryId}/comments/c971d550-8d54-11e8-9071-02a1d0b8a704",
+					$"https://activity.api.np.km.playstation.net/activity/api/v1/users/me/stories/{this._story.StoryId}/comments/{this.Information.CommentId}",
 					this.Client.Tokens.Authorization);
 				return true;
 			}
@@ -41,8 +45,6 @@ namespace PlayStationSharp.API
 						throw;
 				}
 			}
-
 		}
-
 	}
 }

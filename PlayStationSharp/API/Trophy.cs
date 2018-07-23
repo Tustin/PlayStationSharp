@@ -22,7 +22,7 @@ namespace PlayStationSharp.API
 		/// <returns>True if the trophy was successfully deleted.</returns>
 		public bool DeleteTrophy(string gameContentId)
 		{
-			Request.SendDeleteRequest<object>($"https://us-tpy.np.community.playstation.net/trophy/v1/users/{ this.Client.Account.Profile.Information.OnlineId }/trophyTitles/{ gameContentId }",
+			Request.SendDeleteRequest<object>($"https://us-tpy.np.community.playstation.net/trophy/v1/users/{ this.Client.Account.OnlineId}/trophyTitles/{ gameContentId }",
 				this.Client.Tokens.Authorization);
 
 			return true;

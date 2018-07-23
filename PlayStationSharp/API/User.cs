@@ -11,15 +11,10 @@ namespace PlayStationSharp.API
 {
 	public class User : AbstractUser
 	{
-		public ProfileModel Profile { get; private set; }
-
-		private readonly Lazy<List<Trophy>> _trophies;
 		private readonly Lazy<List<MessageThread>> _messageThreads;
 
-		public List<Trophy> Trophies => _trophies.Value;
 		public List<MessageThread> MessageThreads => _messageThreads.Value;
 
-		public string OnlineId => this.Profile.OnlineId;
 
 		[Flags]
 		public enum RequestType
@@ -28,35 +23,37 @@ namespace PlayStationSharp.API
 			Close,
 		}
 
-		private User(PlayStationClient client)
+		private User()
 		{
-			Client = client;
-			_trophies = new Lazy<List<Trophy>>(() => this.GetTrophies());
 			_messageThreads = new Lazy<List<MessageThread>>(this.GetMessageThreads);
 		}
 
-
-		public User(PlayStationClient client, string psn) : this(client)
+		public User(PlayStationClient client, ProfileModel profile) : this()
 		{
-			Profile = this.GetInfo(psn).Information;
+			Init(client, profile);
 		}
 
-		public User(PlayStationClient client, ProfileModel profile) : this(client)
+		public User(PlayStationClient client, string onlineId)
 		{
-			Profile = profile;
+			Init(client, onlineId);
 		}
+
+		//public User(PlayStationClient client, ProfileModel profile) : this(client)
+		//{
+		//	Profile = profile;
+		//}
+
 		/// <summary>
 		/// Adds the current user as a friend.
 		/// </summary>
 		/// <param name="requestType">Type of friend request to send.</param>
 		/// <param name="requestMessage">The message to send with the request.</param>
-
 		public bool AddFriend(RequestType requestType = RequestType.Normal, string requestMessage = "")
 		{
 			try
 			{
 				var endpoint =
-					$"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/friendList/{this.Profile.OnlineId}{(requestType == RequestType.Close ? "/personalDetailSharingWithBody" : "")}";
+					$"{APIEndpoints.USERS_URL}{this.Client.Account.OnlineId}/friendList/{this.Profile.OnlineId}{(requestType == RequestType.Close ? "/personalDetailSharingWithBody" : "")}";
 
 				var message = (string.IsNullOrEmpty(requestMessage))
 					? new object()
@@ -91,7 +88,7 @@ namespace PlayStationSharp.API
 			try
 			{
 				Request.SendDeleteRequest<object>(
-					$"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/friendList/{this.Profile.OnlineId}",
+					$"{APIEndpoints.USERS_URL}{this.Client.Account.OnlineId}/friendList/{this.Profile.OnlineId}",
 					this.Client.Tokens.Authorization);
 			}
 			catch (PlayStationApiException ex)
@@ -112,7 +109,7 @@ namespace PlayStationSharp.API
 		/// </summary>
 		public void Block()
 		{
-			var response = Request.SendJsonPostRequestAsync<object>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/blockList/{this.Profile.OnlineId}",
+			var response = Request.SendJsonPostRequestAsync<object>($"{APIEndpoints.USERS_URL}{this.Client.Account.OnlineId}/blockList/{this.Profile.OnlineId}",
 				null, this.Client.Tokens.Authorization);
 		}
 
@@ -122,7 +119,7 @@ namespace PlayStationSharp.API
 		/// <returns>True if the user was unblocked successfully.</returns>
 		public void Unblock()
 		{
-			var response = Request.SendDeleteRequest<object>($"{APIEndpoints.USERS_URL}{this.Client.Account.Profile.Information.OnlineId}/blockList/{this.Profile.OnlineId}",
+			var response = Request.SendDeleteRequest<object>($"{APIEndpoints.USERS_URL}{this.Client.Account.OnlineId}/blockList/{this.Profile.OnlineId}",
 				this.Client.Tokens.Authorization);
 		}
 
@@ -174,7 +171,7 @@ namespace PlayStationSharp.API
 								},
 								new
 								{
-									onlineId = this.Client.Account.Profile.Information.OnlineId
+									onlineId = this.Client.Account.OnlineId
 								}
 							}
 						}
@@ -202,22 +199,14 @@ namespace PlayStationSharp.API
 		/// <param name="offset"></param>
 		/// <param name="limit"></param>
 		/// <returns></returns>
-		public List<Trophy> GetTrophies(int offset = 0, int limit = 36)
-		{
-			var trophyModels = Request.SendGetRequest<TrophyModel>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset={offset}&limit={limit}&comparedUser={this.Profile.OnlineId}",
-				this.Client.Tokens.Authorization);
-
-			return trophyModels.TrophyTitles.Select(trophy => new Trophy(Client, trophy)).ToList();
-		}
-
-		/// <summary>
-		/// Gets the activity of the current User.
-		/// </summary>
-		/// <returns>An ActivityResponse object containing a list of all the posts.</returns>
-		//public Story.ActivityResponse GetActivity()
+		//public List<Trophy> GetTrophies(int offset = 0, int limit = 36)
 		//{
-		//	return Request.SendGetRequest<Story.ActivityResponse>($"https://activity.api.np.km.playstation.net/activity/api/v1/users/{this.Profile.onlineId}/feed/0?includeComments=true&includeTaggedItems=true&filters=PURCHASED&filters=RATED&filters=VIDEO_UPLOAD&filters=SCREENSHOT_UPLOAD&filters=PLAYED_GAME&filters=WATCHED_VIDEO&filters=TROPHY&filters=BROADCASTING&filters=LIKED&filters=PROFILE_PIC&filters=FRIENDED&filters=CONTENT_SHARE&filters=IN_GAME_POST&filters=RENTED&filters=SUBSCRIBED&filters=FIRST_PLAYED_GAME&filters=IN_APP_POST&filters=APP_WATCHED_VIDEO&filters=SHARE_PLAYED_GAME&filters=VIDEO_UPLOAD_VERIFIED&filters=SCREENSHOT_UPLOAD_VERIFIED&filters=SHARED_EVENT&filters=JOIN_EVENT&filters=TROPHY_UPLOAD&filters=FOLLOWING&filters=RESHARE",
-		//		 Auth.CurrentInstance.AccountTokens.Authorization);
+		//	var trophyModels = Request.SendGetRequest<TrophyModel>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset={offset}&limit={limit}&comparedUser={this.Profile.OnlineId}",
+		//		this.Client.Tokens.Authorization);
+
+		//	return trophyModels.TrophyTitles.Select(trophy => new Trophy(Client, trophy)).ToList();
 		//}
+
+
 	}
 }
