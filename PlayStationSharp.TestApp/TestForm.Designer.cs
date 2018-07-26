@@ -62,6 +62,7 @@
 			this.lstFriends.Size = new System.Drawing.Size(138, 238);
 			this.lstFriends.TabIndex = 2;
 			this.lstFriends.Visible = false;
+			this.lstFriends.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstFriends_MouseDoubleClick);
 			// 
 			// lblFriends
 			// 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using PlayStationSharp.Exceptions;
 using PlayStationSharp.Exceptions.User;
 using PlayStationSharp.Extensions;
@@ -14,7 +13,6 @@ namespace PlayStationSharp.API
 		private readonly Lazy<List<MessageThread>> _messageThreads;
 
 		public List<MessageThread> MessageThreads => _messageThreads.Value;
-
 
 		[Flags]
 		public enum RequestType
@@ -33,15 +31,10 @@ namespace PlayStationSharp.API
 			Init(client, profile);
 		}
 
-		public User(PlayStationClient client, string onlineId)
+		public User(PlayStationClient client, string onlineId) : this()
 		{
 			Init(client, onlineId);
 		}
-
-		//public User(PlayStationClient client, ProfileModel profile) : this(client)
-		//{
-		//	Profile = profile;
-		//}
 
 		/// <summary>
 		/// Adds the current user as a friend.
@@ -116,7 +109,6 @@ namespace PlayStationSharp.API
 		/// <summary>
 		/// Unblocks the current user.
 		/// </summary>
-		/// <returns>True if the user was unblocked successfully.</returns>
 		public void Unblock()
 		{
 			var response = Request.SendDeleteRequest<object>($"{APIEndpoints.USERS_URL}{this.Client.Account.OnlineId}/blockList/{this.Profile.OnlineId}",
@@ -128,8 +120,7 @@ namespace PlayStationSharp.API
 		/// </summary>
 		public void Follow()
 		{
-			// No point in returning anything here because the endpoint doesn't throw an error if you try to follow someone while
-			// already following them.
+			// No point in returning anything here because the endpoint doesn't throw an error if you try to follow someone while already following them.
 			Request.SendPutRequest<object>(
 				$"https://us-fllw.np.community.playstation.net/follow/v1/users/me/followings/users/{this.OnlineId}",
 				oAuthToken: this.Client.Tokens.Authorization);
@@ -191,22 +182,5 @@ namespace PlayStationSharp.API
 		{
 			return this.Client.Account.FindMessageThreads(this.OnlineId);
 		}
-
-		// TODO: Remove redudancy of GetTrophies
-		/// <summary>
-		/// Compares the current User's trophies with the current logged in account.
-		/// </summary>
-		/// <param name="offset"></param>
-		/// <param name="limit"></param>
-		/// <returns></returns>
-		//public List<Trophy> GetTrophies(int offset = 0, int limit = 36)
-		//{
-		//	var trophyModels = Request.SendGetRequest<TrophyModel>($"https://us-tpy.np.community.playstation.net/trophy/v1/trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset={offset}&limit={limit}&comparedUser={this.Profile.OnlineId}",
-		//		this.Client.Tokens.Authorization);
-
-		//	return trophyModels.TrophyTitles.Select(trophy => new Trophy(Client, trophy)).ToList();
-		//}
-
-
 	}
 }

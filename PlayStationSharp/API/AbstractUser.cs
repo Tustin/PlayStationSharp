@@ -28,6 +28,9 @@ namespace PlayStationSharp.API
 
 		public string OnlineId => this.Profile.OnlineId;
 
+		public override string ToString() => this.OnlineId;
+
+
 		[Flags]
 		public enum StatusFilter
 		{
@@ -63,7 +66,7 @@ namespace PlayStationSharp.API
 		/// <summary>
 		/// Fetches profile of a user.
 		/// </summary>
-		/// <param name="psn">The PSN online Id of the user.</param>
+		/// <param name="onlineId">The PSN online Id of the user.</param>
 		/// <returns>A profile object containing the user's info</returns>
 		protected Profile GetInfo(string onlineId = null)
 		{
@@ -78,7 +81,7 @@ namespace PlayStationSharp.API
 		/// <returns>A list of User objects for each friend.</returns>
 		protected List<User> GetFriends(StatusFilter filter = StatusFilter.All, int limit = 500)
 		{
-			var response = Request.SendGetRequest<FriendModel>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/{this.UserParameter}/friends/profiles2?fields=onlineId,accountId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),presences(@titleInfo,hasBroadcastData),presences(@titleInfo),friendRelation,consoleAvailability&profilePictureSizes=m&avatarSizes=m&sort=onlineStatus&titleIconSize=s&extendPersonalDetailTarget=true&offset=0&limit={limit}",
+			var response = Request.SendGetRequest<FriendModel>($"https://us-prof.np.community.playstation.net/userProfile/v1/users/{this.UserParameter}/friends/profiles2?fields=onlineId,accountId,avatarUrls,aboutMe,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),presences(@titleInfo,hasBroadcastData),presences(@titleInfo),friendRelation,consoleAvailability&profilePictureSizes=m&avatarSizes=m&sort=onlineStatus&titleIconSize=s&extendPersonalDetailTarget=true&offset=0&limit={limit}",
 				this.Client.Tokens.Authorization);
 
 			return response.Profiles.Select(friend => new User(Client, friend)).ToList();
@@ -87,6 +90,7 @@ namespace PlayStationSharp.API
 		/// <summary>
 		/// Gets trophies for the current account.
 		/// </summary>
+		/// <param name="offset"></param>
 		/// <param name="limit">The amount of trophies to return.</param>
 		/// <returns></returns>
 		public List<Trophy> GetTrophies(int offset = 0, int limit = 36)
