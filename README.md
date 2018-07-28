@@ -11,6 +11,7 @@ Due to changes to Sony's login system, you can no longer login with a username a
 ```csharp
 using PlayStationSharp.API;
 
+// Spawns a new Windows form with Sony's login form.
 var account = Auth.CreateLogin();
 
 // Will return null if form was closed manually.
