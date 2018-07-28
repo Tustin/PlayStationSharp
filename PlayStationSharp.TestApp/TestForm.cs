@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using PlayStationSharp.API;
 using PlayStationSharp.Extensions;
@@ -41,6 +43,7 @@ namespace PlayStationSharp.TestApp
 			lblOnlineId.Visible = !needsLogin;
 			lstFriends.Visible = !needsLogin;
 			lblFriends.Visible = !needsLogin;
+			btnBackgroundColor.Visible = !needsLogin;
 		}
 
 		private void TestForm_Load(object sender, EventArgs e)
@@ -62,6 +65,34 @@ namespace PlayStationSharp.TestApp
 			if (lstFriends.SelectedItem == null) return;
 
 			new ProfileForm(lstFriends.SelectedItem as User).ShowDialog();
+		}
+
+		private void btnBackgroundColor_Click(object sender, EventArgs e)
+		{
+			if (colorBackgroundColor.ShowDialog() == DialogResult.OK)
+			{
+				Account.UpdateBackgroundColor(colorBackgroundColor.Color);
+			}
+		}
+
+		private void btnDeleteInactives_Click(object sender, EventArgs e)
+		{
+			if (MessageBox.Show("Are you sure you want to delete all inactive friends?", "Confirm",
+					MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				var friends = Account.Friends;
+			}
+		}
+
+		private void btnBackgroundImage_Click(object sender, EventArgs e)
+		{
+			using (var fd = new OpenFileDialog())
+			{
+				if (fd.ShowDialog() == DialogResult.OK)
+				{
+					Account.UpdateBackgroundImage(Image.FromFile(fd.FileName));
+				}
+			}
 		}
 	}
 }

@@ -32,6 +32,9 @@
 			this.lblOnlineId = new System.Windows.Forms.Label();
 			this.lstFriends = new System.Windows.Forms.ListBox();
 			this.lblFriends = new System.Windows.Forms.Label();
+			this.btnBackgroundColor = new System.Windows.Forms.Button();
+			this.colorBackgroundColor = new System.Windows.Forms.ColorDialog();
+			this.btnBackgroundImage = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnLogin
@@ -73,11 +76,34 @@
 			this.lblFriends.TabIndex = 3;
 			this.lblFriends.Text = "Friends";
 			// 
+			// btnBackgroundColor
+			// 
+			this.btnBackgroundColor.Location = new System.Drawing.Point(12, 243);
+			this.btnBackgroundColor.Name = "btnBackgroundColor";
+			this.btnBackgroundColor.Size = new System.Drawing.Size(151, 23);
+			this.btnBackgroundColor.TabIndex = 4;
+			this.btnBackgroundColor.Text = "Background Color";
+			this.btnBackgroundColor.UseVisualStyleBackColor = true;
+			this.btnBackgroundColor.Visible = false;
+			this.btnBackgroundColor.Click += new System.EventHandler(this.btnBackgroundColor_Click);
+			// 
+			// btnBackgroundImage
+			// 
+			this.btnBackgroundImage.Location = new System.Drawing.Point(204, 243);
+			this.btnBackgroundImage.Name = "btnBackgroundImage";
+			this.btnBackgroundImage.Size = new System.Drawing.Size(151, 23);
+			this.btnBackgroundImage.TabIndex = 5;
+			this.btnBackgroundImage.Text = "Background Image";
+			this.btnBackgroundImage.UseVisualStyleBackColor = true;
+			this.btnBackgroundImage.Click += new System.EventHandler(this.btnBackgroundImage_Click);
+			// 
 			// TestForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(511, 278);
+			this.Controls.Add(this.btnBackgroundImage);
+			this.Controls.Add(this.btnBackgroundColor);
 			this.Controls.Add(this.lblFriends);
 			this.Controls.Add(this.lstFriends);
 			this.Controls.Add(this.lblOnlineId);
@@ -96,6 +122,9 @@
 		private System.Windows.Forms.Label lblOnlineId;
 		private System.Windows.Forms.ListBox lstFriends;
 		private System.Windows.Forms.Label lblFriends;
+		private System.Windows.Forms.Button btnBackgroundColor;
+		private System.Windows.Forms.ColorDialog colorBackgroundColor;
+		private System.Windows.Forms.Button btnBackgroundImage;
 	}
 }
 

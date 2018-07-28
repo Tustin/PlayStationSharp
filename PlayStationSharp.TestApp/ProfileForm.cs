@@ -23,6 +23,7 @@ namespace PlayStationSharp.TestApp
 			lblOnlineId.Text = _user.OnlineId;
 			txtAboutMe.Text = _user.Profile.AboutMe;
 			imgAvatar.ImageLocation = _user.Profile.AvatarUrls[0].AvatarUrl;
+			this.Text = _user.OnlineId;
 		}
 
 		private void ProfileForm_Load(object sender, EventArgs e)

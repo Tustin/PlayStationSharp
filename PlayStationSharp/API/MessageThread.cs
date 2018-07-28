@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Flurl.Http;
+using Newtonsoft.Json;
 using PlayStationSharp.Exceptions;
 using PlayStationSharp.Exceptions.Message;
 using PlayStationSharp.Model;
@@ -127,18 +129,33 @@ namespace PlayStationSharp.API
 		/// <returns>New instance of the message thread.</returns>
 		public MessageThread SendMessage(string content)
 		{
-			var messageModel = Request.SendMultiPartPostRequest<CreatedThreadModel>(
-				$"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/{this.Information.ThreadId}/messages", "gc0p4Jq0M2Yt08jU534c0p", "messageEventDetail", new
+			var data = new
+			{
+				messageEventDetail = new
 				{
-					messageEventDetail = new
+					eventCategoryCode = 1,
+					messageDetail = new
 					{
-						eventCategoryCode = 1,
-						messageDetail = new
-						{
-							body = content
-						}
+						body = content
 					}
-				}, this.Client.Tokens.Authorization);
+				}
+			};
+
+			var requestBody = new StringBuilder();
+
+			requestBody.Append("--gc0p4Jq0M2Yt08jU534c0p");
+			requestBody.AppendLine();
+			requestBody.Append("Content-Type: application/json; charset=utf-8");
+			requestBody.AppendLine();
+			requestBody.Append("Content-Disposition: form-data; name=\"messageEventDetail\"");
+			requestBody.AppendLine();
+			requestBody.AppendLine();
+			requestBody.Append(JsonConvert.SerializeObject(data, Formatting.Indented));
+			requestBody.AppendLine();
+			requestBody.Append("--gc0p4Jq0M2Yt08jU534c0p--");
+
+			var messageModel = Request.SendMultiPartPostRequest<CreatedThreadModel>(
+				$"https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/{this.Information.ThreadId}/messages", requestBody, "gc0p4Jq0M2Yt08jU534c0p", this.Client.Tokens.Authorization);
 
 			return this;
 		}

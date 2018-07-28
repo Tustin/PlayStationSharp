@@ -54,11 +54,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\AbstractUser.cs" />
+    <Compile Include="Exceptions\EmptyImageException.cs" />
     <Compile Include="Exceptions\Activity\NoCommentsFoundException.cs" />
     <Compile Include="Exceptions\Activity\EmptyActivityFeedException.cs" />
     <Compile Include="Exceptions\Activity\InvalidCommentException.cs" />
+    <Compile Include="Exceptions\InvalidColorException.cs" />
     <Compile Include="Exceptions\InvalidErrorException.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
+    <Compile Include="Model\BackgroundImageModel.cs" />
     <Compile Include="Model\CommentModel.cs" />
     <Compile Include="API\Story.cs" />
     <Compile Include="API\Comment.cs" />
@@ -90,6 +93,7 @@
     <Compile Include="Model\OAuthTokenModel.cs" />
     <Compile Include="Model\ThreadModel.cs" />
     <Compile Include="Model\ThreadsModel.cs" />
+    <Compile Include="Model\UploadImageModel.cs" />
     <Compile Include="PlayStationClient.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Model\ActivityModel.cs" />

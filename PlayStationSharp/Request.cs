@@ -35,7 +35,6 @@ namespace PlayStationSharp
 					if (!(ex is FlurlHttpException fe)) throw ex;
 					var error = fe.GetResponseStringAsync().Result;
 					throw new PlayStationApiException(Utilities.ParseError(error));
-
 				});
 				throw;
 			}
@@ -62,7 +61,7 @@ namespace PlayStationSharp
 				ae.Handle(ex =>
 				{
 					if (!(ex is FlurlHttpException fe)) throw ex;
-					var error = fe.GetResponseJsonAsync<dynamic>().Result;
+					var error = fe.GetResponseStringAsync().Result;
 					throw new PlayStationApiException(Utilities.ParseError(error));
 				});
 				throw;
@@ -90,7 +89,7 @@ namespace PlayStationSharp
 				ae.Handle(ex =>
 				{
 					if (!(ex is FlurlHttpException fe)) throw ex;
-					var error = fe.GetResponseJsonAsync<dynamic>().Result;
+					var error = fe.GetResponseStringAsync().Result;
 					throw new PlayStationApiException(Utilities.ParseError(error));
 
 				});
@@ -118,9 +117,8 @@ namespace PlayStationSharp
 				ae.Handle(ex =>
 				{
 					if (!(ex is FlurlHttpException fe)) throw ex;
-					var error = fe.GetResponseJsonAsync<dynamic>().Result;
+					var error = fe.GetResponseStringAsync().Result;
 					throw new PlayStationApiException(Utilities.ParseError(error));
-
 				});
 				throw;
 			}
@@ -148,35 +146,44 @@ namespace PlayStationSharp
 				ae.Handle(ex =>
 				{
 					if (!(ex is FlurlHttpException fe)) throw ex;
-					var error = fe.GetResponseJsonAsync<dynamic>().Result;
+					var error = fe.GetResponseStringAsync().Result;
 					throw new PlayStationApiException(Utilities.ParseError(error));
-
 				});
 				throw;
 			}
 		}
 
-		public static T SendMultiPartPostRequest<T>(string url, string boundry, string dispositionName, object data, string oAuthToken = "") where T : class
+		public static T SendPatchRequest<T>(string url, object data, string oAuthToken = "") where T : class
 		{
 			try
 			{
-				var sb = new StringBuilder();
+				return url
+					.WithOAuthBearerToken(oAuthToken)
+					.PatchJsonAsync(data)
+					.ReceiveJson<T>().Result;
+			}
+			catch (AggregateException ae)
+			{
+				ae.Handle(ex =>
+				{
+					if (!(ex is FlurlHttpException fe)) throw ex;
+					var error = fe.GetResponseStringAsync().Result;
+					throw new PlayStationApiException(Utilities.ParseError(error));
+				});
+				throw;
+			}
+		}
 
-				sb.Append($"--{boundry}");
-				sb.AppendLine();
-				sb.Append("Content-Type: application/json; charset=utf-8");
-				sb.AppendLine();
-				sb.Append($"Content-Disposition: form-data; name=\"{dispositionName}\"");
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.Append(JsonConvert.SerializeObject(data, Formatting.Indented));
-				sb.AppendLine();
-				sb.Append($"--{boundry}--");
+		public static T SendMultiPartPostRequest<T>(string url, StringBuilder data, string boundry, string oAuthToken = "") where T : class
+		{
+			try
+			{
+
 
 				return url
 					.WithOAuthBearerToken(oAuthToken)
 					.WithHeader("Content-Type", $"multipart/form-data; boundary=\"{boundry}\"")
-					.PostStringAsync(sb.ToString())
+					.PostStringAsync(data.ToString())
 					.ReceiveJson<T>().Result;
 
 			}
@@ -185,7 +192,7 @@ namespace PlayStationSharp
 				ae.Handle(ex =>
 				{
 					if (!(ex is FlurlHttpException fe)) throw ex;
-					var error = fe.GetResponseJsonAsync<dynamic>().Result;
+					var error = fe.GetResponseStringAsync().Result;
 					throw new PlayStationApiException(Utilities.ParseError(error));
 				});
 				throw;
