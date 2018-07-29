@@ -4,7 +4,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using PlayStationSharp.Exceptions;
 using PlayStationSharp.Exceptions.Activity;
+using PlayStationSharp.Exceptions.User;
 using PlayStationSharp.Model;
 using PlayStationSharp.Model.ProfileJsonTypes;
 
@@ -15,6 +17,7 @@ namespace PlayStationSharp.API
 		private readonly Lazy<List<User>> _friends;
 		private readonly Lazy<List<Trophy>> _trophies;
 		private readonly Lazy<List<Story>> _activityFeed;
+		private readonly Lazy<Session> _session;
 
 		private string UserParameter =>
 			(this.OnlineId == this.Client.Account.OnlineId) ? "me" : this.OnlineId;
@@ -22,6 +25,7 @@ namespace PlayStationSharp.API
 		public List<User> Friends => _friends.Value;
 		public List<Trophy> Trophies => _trophies.Value;
 		public List<Story> ActivityFeed => _activityFeed.Value;
+		public Session Session => _session.Value;
 
 		public ProfileModel Profile { get; protected set; }
 		public PlayStationClient Client { get; protected set; }
@@ -43,6 +47,7 @@ namespace PlayStationSharp.API
 			_friends = new Lazy<List<User>>(() => GetFriends());
 			_trophies = new Lazy<List<Trophy>>(() => GetTrophies());
 			_activityFeed = new Lazy<List<Story>>(() => GetActivityFeed());
+			_session = new Lazy<Session>(GetCurrentSession);
 		}
 
 		protected void Init(PlayStationClient client)
@@ -120,6 +125,33 @@ namespace PlayStationSharp.API
 			if (activityModels.Feed.Count == 0) throw new EmptyActivityFeedException();
 
 			return activityModels.Feed.Select(feed => new Story(Client, feed)).ToList();
+		}
+
+		/// <summary>
+		/// Gets the user's current session.
+		/// </summary>
+		/// <returns>New Session object.</returns>
+		protected Session GetCurrentSession()
+		{
+			try
+			{
+				var sessionModel = Request.SendGetRequest<SessionModel>(
+					$"https://us-ivt.np.community.playstation.net/sessionInvitation/v1/users/{UserParameter}/sessions?fields=@default,npTitleDetail,npTitleDetail.platform,sessionName,sessionCreateTimestamp,availablePlatforms,members,memberCount,sessionMaxUser&titleIconSize=s&npLanguage=en",
+					this.Client.Tokens.Authorization);
+
+				return sessionModel.Size == 0 ? null : new Session(Client, sessionModel);
+			}
+			catch (PlayStationApiException ex)
+			{
+				switch (ex.Error.Code)
+				{
+					case 2113796:
+						throw new UserNotFoundException(ex.Error.Message);
+					default:
+						throw;
+				}
+			}
+
 		}
 	}
 }

@@ -20,6 +20,8 @@ namespace PlayStationSharp.TestApp
 			InitializeComponent();
 			_user = user;
 
+			var sesh = user.Session;
+
 			lblOnlineId.Text = _user.OnlineId;
 			txtAboutMe.Text = _user.Profile.AboutMe;
 			imgAvatar.ImageLocation = _user.Profile.AvatarUrls[0].AvatarUrl;

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\AbstractUser.cs" />
+    <Compile Include="API\Session.cs" />
     <Compile Include="Exceptions\EmptyImageException.cs" />
     <Compile Include="Exceptions\Activity\NoCommentsFoundException.cs" />
     <Compile Include="Exceptions\Activity\EmptyActivityFeedException.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Model\AuthErrorModel.cs" />
     <Compile Include="Model\CreatedThreadModel.cs" />
     <Compile Include="Model\OAuthTokenModel.cs" />
+    <Compile Include="Model\SessionModel.cs" />
     <Compile Include="Model\ThreadModel.cs" />
     <Compile Include="Model\ThreadsModel.cs" />
     <Compile Include="Model\UploadImageModel.cs" />
