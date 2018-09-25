@@ -26,6 +26,8 @@ namespace PlayStationSharp.API
 
 		public List<MessageThread> MessageThreads => _messageThreads.Value;
 
+		public OAuthTokens Tokens => this.Client.Tokens;
+
 		public Account(OAuthTokens tokens)
 		{
 			Init(new PlayStationClient(tokens, this));

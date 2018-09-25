@@ -56,6 +56,21 @@ namespace PlayStationSharp.Model.ProfileJsonTypes
 		[JsonProperty("onlineStatus")]
 		public string OnlineStatus { get; set; }
 
+		[JsonProperty("platform")]
+		public string Platform { get; set; }
+
+		[JsonProperty("npTitleId")]
+		public string NpTitleId { get; set; }
+
+		[JsonProperty("titleName")]
+		public string TitleName { get; set; }
+
+		[JsonProperty("npTitleIconUrl")]
+		public string NpTitleIconUrl { get; set; }
+
+		[JsonProperty("gameStatus")]
+		public string GameStatus { get; set; }
+
 		[JsonProperty("hasBroadcastData")]
 		public bool HasBroadcastData { get; set; }
 	}

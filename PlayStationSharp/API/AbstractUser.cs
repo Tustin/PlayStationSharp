@@ -73,9 +73,9 @@ namespace PlayStationSharp.API
 		/// </summary>
 		/// <param name="onlineId">The PSN online Id of the user.</param>
 		/// <returns>A profile object containing the user's info</returns>
-		protected Profile GetInfo(string onlineId = null)
+		public Profile GetInfo(string onlineId = null)
 		{
-			return Request.SendGetRequest<Profile>($"{APIEndpoints.USERS_URL}{onlineId ?? "me"}/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s", this.Client.Tokens.Authorization);
+			return Request.SendGetRequest<Profile>($"{APIEndpoints.USERS_URL}{onlineId ?? "me"}/profile2?fields=onlineId,accountId,avatarUrls,plus,aboutMe,personalDetail(@default,profilePictureUrls),trophySummary(@default,progress,earnedTrophies),languagesUsed,isOfficiallyVerified,personalDetailSharing,consoleAvailability,presences(@titleInfo,hasBroadcastData,gameStatus),mutualFriendsCount,requestMessageFlag,personalDetailSharingRequestMessageFlag,friendRelation,blocking,following,followerCount&languagesUsedLanguageSet=set4&profilePictureSizes=m,xl&avatarSizes=m,xl&titleIconSize=s", this.Client.Tokens.Authorization);
 		}
 
 		/// <summary>
