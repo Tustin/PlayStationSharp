@@ -29,7 +29,8 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
-			this.webLogin = new System.Windows.Forms.WebBrowser();
+			this.webLogin = new Microsoft.Toolkit.Win32.UI.Controls.WinForms.WebView();
+			((System.ComponentModel.ISupportInitialize)(this.webLogin)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// webLogin
@@ -39,9 +40,9 @@
 			this.webLogin.MinimumSize = new System.Drawing.Size(20, 20);
 			this.webLogin.Name = "webLogin";
 			this.webLogin.Size = new System.Drawing.Size(574, 636);
+			this.webLogin.Source = new System.Uri(resources.GetString("webLogin.Source"), System.UriKind.Absolute);
 			this.webLogin.TabIndex = 0;
-			this.webLogin.Url = new System.Uri(resources.GetString("webLogin.Url"), System.UriKind.Absolute);
-			this.webLogin.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.webLogin_Navigated);
+			this.webLogin.NavigationStarting += new System.EventHandler<Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT.WebViewControlNavigationStartingEventArgs>(this.webLogin_NavigationStarting);
 			// 
 			// LoginForm
 			// 
@@ -55,12 +56,13 @@
 			this.Name = "LoginForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Login";
+			((System.ComponentModel.ISupportInitialize)(this.webLogin)).EndInit();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.WebBrowser webLogin;
+		private Microsoft.Toolkit.Win32.UI.Controls.WinForms.WebView webLogin;
 	}
 }
