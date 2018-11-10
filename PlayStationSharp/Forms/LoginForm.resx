@@ -117,7 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="webLogin.Source" xml:space="preserve">
-    <value>https://id.sonyentertainmentnetwork.com/signin/?response_type=code&amp;state=Mk3XMrOCFhSESmmzrUgeQh0qWQ&amp;app_context=inapp_ios&amp;device_profile=mobile&amp;elements_visibility=no_aclink&amp;scope=kamaji%3Aget_players_met%20kamaji%3Aget_account_hash%20kamaji%3Aactivity_feed_submit_feed_story%20kamaji%3Aactivity_feed_internal_feed_submit_story%20kamaji%3Aactivity_feed_get_news_feed%20kamaji%3Acommunities%20kamaji%3Agame_list%20kamaji%3Augc%3Adistributor%20oauth%3Amanage_device_usercodes%20psn%3Asceapp%20user%3Aaccount.profile.get%20user%3Aaccount.attributes.validate%20user%3Aaccount.settings.privacy.get%20kamaji%3Aactivity_feed_set_feed_privacy%20kamaji%3Asatchel%20kamaji%3Asatchel_delete%20user%3Aaccount.profile.update%20kamaji%3Aurl_preview&amp;service_entity=urn%3Aservice-entity%3Apsn&amp;ui=pr&amp;smcid=psapp%253Asettings-entrance&amp;support_scheme=sneiprls&amp;redirect_uri=com.playstation.PlayStationApp%3A%2F%2Fredirect&amp;device_base_font_size=10&amp;PlatformPrivacyWs1=exempt&amp;duid=0000000d00040080027BC1C3FBB84112BFC9A4300A78E96A&amp;client_id=ebee17ac-99fd-487c-9b1e-18ef50c39ab5&amp;service_logo=ps&amp;error=login_required&amp;error_code=4165&amp;error_description=User+is+not+authenticated</value>
-  </data>
 </root>
