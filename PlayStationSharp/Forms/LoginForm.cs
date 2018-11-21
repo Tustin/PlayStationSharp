@@ -46,7 +46,8 @@ namespace PlayStationSharp.Forms
 					Size = new System.Drawing.Size(574, 636),
 					Url = new System.Uri(this._loginUrl, System.UriKind.Absolute),
 					TabIndex = 0,
-					Visible = true
+					Visible = true,
+					ScriptErrorsSuppressed = true
 				};
 
 				webBrowserLogin.Navigated += webBrowserLogin_Navigated;
