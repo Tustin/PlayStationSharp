@@ -75,7 +75,7 @@ namespace PlayStationSharp.API
 		/// <returns>A profile object containing the user's info</returns>
 		public Profile GetInfo(string onlineId = null)
 		{
-			return Request.SendGetRequest<Profile>($"{APIEndpoints.USERS_URL}{onlineId ?? "me"}/profile2?fields=onlineId,accountId,avatarUrls,plus,aboutMe,personalDetail(@default,profilePictureUrls),trophySummary(@default,progress,earnedTrophies),languagesUsed,isOfficiallyVerified,personalDetailSharing,consoleAvailability,presences(@titleInfo,hasBroadcastData,gameStatus),mutualFriendsCount,requestMessageFlag,personalDetailSharingRequestMessageFlag,friendRelation,blocking,following,followerCount&languagesUsedLanguageSet=set4&profilePictureSizes=m,xl&avatarSizes=m,xl&titleIconSize=s", this.Client.Tokens.Authorization);
+			return Request.SendGetRequest<Profile>($"{APIEndpoints.USERS_URL}{onlineId ?? "me"}/profile2?fields=npId,onlineId,accountId,avatarUrls,plus,aboutMe,personalDetail(@default,profilePictureUrls),trophySummary(@default,progress,earnedTrophies),languagesUsed,isOfficiallyVerified,personalDetailSharing,consoleAvailability,presences(@titleInfo,hasBroadcastData,gameStatus),mutualFriendsCount,requestMessageFlag,personalDetailSharingRequestMessageFlag,friendRelation,blocking,following,followerCount&languagesUsedLanguageSet=set4&profilePictureSizes=m,xl&avatarSizes=m,xl&titleIconSize=s", this.Client.Tokens.Authorization);
 		}
 
 		/// <summary>

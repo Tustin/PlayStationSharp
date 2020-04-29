@@ -139,7 +139,7 @@ namespace PlayStationSharp.API
 						new BackgroundImageModel(new BackgroundImageModel.Operation("replace", "/sourceUrl", data.Url)),
 						this.Client.Tokens.Authorization);
 				}
-				catch (PlayStationApiException ex)
+				catch (PlayStationApiException)
 				{
 					// 
 				} 
