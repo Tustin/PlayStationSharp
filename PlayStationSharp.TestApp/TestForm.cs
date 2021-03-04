@@ -14,16 +14,24 @@ namespace PlayStationSharp.TestApp
 			InitializeComponent();
 		}
 
-		private Account Account { get; set; }
+		private Account _account;
+		private Account Account
+		{
+			get => _account;
+            set
+            {
+				btnBackgroundColor.Visible = !(value is null);
+				_account = value;
+            }
+		}
 
 		private void btnLogin_Click(object sender, EventArgs e)
 		{
-			var account = Auth.CreateLogin();
+			Account = Auth.CreateLogin();
 
-			if (account == null) return;
-
-			this.Account = account;
-			TokenHandler.Write(account.Client.Tokens);
+			if (Account == null) return;
+;
+			TokenHandler.Write(Account.Client.Tokens);
 
 			SetupLogin(false);
 			PopulateFields();
@@ -54,7 +62,7 @@ namespace PlayStationSharp.TestApp
 				SetupLogin(false);
 				PopulateFields();
 			}
-			catch (Exception)
+			catch
 			{
 				SetupLogin(true);
 			}
