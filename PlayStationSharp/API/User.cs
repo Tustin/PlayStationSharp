@@ -16,6 +16,8 @@ namespace PlayStationSharp.API
 
 		public List<MessageThread> MessageThreads => _messageThreads.Value;
 
+		public bool IsOnline => Profile.Presences != null && Profile.Presences[0].OnlineStatus == "online";
+
 		[Flags]
 		public enum RequestType
 		{

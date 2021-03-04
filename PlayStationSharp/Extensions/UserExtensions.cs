@@ -11,7 +11,7 @@ namespace PlayStationSharp.Extensions
 	{
 		public static List<User> Online(this List<User> users)
 		{
-			return users.Where(a => a.Profile.Presences != null && a.Profile.Presences[0].OnlineStatus == "online").ToList();
+			return users.Where(a => a.IsOnline).ToList();
 		}
 	}
 }
