@@ -62,7 +62,7 @@ namespace PlayStationSharp.TestApp
 				SetupLogin(false);
 				PopulateFields();
 			}
-			catch (Exception)
+			catch
 			{
 				SetupLogin(true);
 			}
